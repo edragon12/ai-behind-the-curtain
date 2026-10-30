@@ -149,6 +149,15 @@ body.present .card .dec,body.present .card .fin{font-size:20px}
     <div class="hide-present"><button class="btn theme" id="themeBtn" type="button" aria-label="Switch color theme">Theme: auto</button></div>
   </header>
   <div class="card" id="card" aria-live="polite"></div>
+  <div class="depth" id="depth">
+    <div class="depth-h">Defense in depth <span>· same attack, three layers</span></div>
+    <div class="depth-row">
+      <div class="depth-item" id="depthEcp" role="checkbox" aria-checked="false" tabindex="0" title="ECP stops the attack at the tool call on the laptop, before the plugin can send the files. It is a generic illustration, not a vendor product."><span class="tick" aria-hidden="true">✓</span><span><b>ECP</b> stops it at the tool call on the laptop</span></div>
+      <div class="depth-item" id="depthDns" role="checkbox" aria-checked="false" tabindex="0" title="Infoblox DNS security can flag or block the lookup of an unknown, newly seen, or risky domain before the connection is made. That can stop the upload at resolution time if policy or threat intel blocks the domain."><span class="tick" aria-hidden="true">✓</span><span><b>Infoblox</b> can block the DNS lookup</span></div>
+      <div class="depth-item" id="depthNet" role="checkbox" aria-checked="false" tabindex="0" title="Kentik can detect and alert on the unusual outbound flow to an unfamiliar host, and can optionally trigger a response through integrations. It does not block the upload on the laptop."><span class="tick" aria-hidden="true">✓</span><span><b>Kentik</b> detects and alerts on the unusual outbound flow</span></div>
+    </div>
+    <p class="depth-out" id="depthOut"></p>
+  </div>
   <h2 class="flow hide-present">Live flow</h2>
   <div class="controls" id="controls">
     <button class="btn primary" id="playBtn" type="button">Play</button>
@@ -160,15 +169,6 @@ body.present .card .dec,body.present .card .fin{font-size:20px}
     <span class="mode" id="modeLbl">Mode: no extra controls (default)</span>
   </div>
   <div class="stage"><svg id="svg" viewBox="0 0 1280 590" preserveAspectRatio="xMidYMid meet" role="img" aria-label="AI assistant request flow diagram"></svg><svg id="fx" viewBox="0 0 1280 590" preserveAspectRatio="xMidYMid meet" aria-hidden="true"></svg></div>
-  <div class="depth" id="depth">
-    <div class="depth-h">Defense in depth <span>· same attack, three layers</span></div>
-    <div class="depth-row">
-      <div class="depth-item" id="depthEcp" role="checkbox" aria-checked="false" tabindex="0" title="ECP stops the attack at the tool call on the laptop, before the plugin can send the files. It is a generic illustration, not a vendor product."><span class="tick" aria-hidden="true">✓</span><span><b>ECP</b> stops it at the tool call on the laptop</span></div>
-      <div class="depth-item" id="depthDns" role="checkbox" aria-checked="false" tabindex="0" title="Infoblox DNS security can flag or block the lookup of an unknown, newly seen, or risky domain before the connection is made. That can stop the upload at resolution time if policy or threat intel blocks the domain."><span class="tick" aria-hidden="true">✓</span><span><b>Infoblox</b> can block the DNS lookup</span></div>
-      <div class="depth-item" id="depthNet" role="checkbox" aria-checked="false" tabindex="0" title="Kentik can detect and alert on the unusual outbound flow to an unfamiliar host, and can optionally trigger a response through integrations. It does not block the upload on the laptop."><span class="tick" aria-hidden="true">✓</span><span><b>Kentik</b> detects and alerts on the unusual outbound flow</span></div>
-    </div>
-    <p class="depth-out" id="depthOut"></p>
-  </div>
 </div>
   <div class="dots hide-present" id="dots"></div>
 
@@ -476,7 +476,7 @@ function render(){
   var G=NODE.guard, gAct=an.guard||(S.prot&&cur.guardOnly);
   h.push('<g><title>'+esc("Endpoint Control and Prevention (ECP)\nIn everyday terms: "+EDAY.guard+"\n"+COMP.guard)+'</title><rect x="'+(G.x-G.w/2)+'" y="'+(G.y-G.h/2)+'" width="'+G.w+'" height="'+G.h+'" rx="10" style="fill:'+(S.prot?css("greenSoft"):css("panel2"))+';stroke:'+(S.prot?green:css("border2"))+';stroke-width:'+(gAct?3:1.5)+(S.prot?'':';stroke-dasharray:6 5')+'"/>'+
     '<text x="'+G.x+'" y="'+(G.y-3)+'" text-anchor="middle" style="font:800 13px var(--font);fill:'+(S.prot?green:css("text3"))+'">'+(S.prot?"Endpoint Control and Prevention (ECP) on the laptop":"No AI-aware control on this laptop")+'</text>'+
-    '<text x="'+G.x+'" y="'+(G.y+14)+'" text-anchor="middle" class="nsub" style="font-size:10.5px">'+(S.prot?"visibility · posture · runtime: allow / hold for approval / block at the tool call":"turn on ECP in the Defense in depth bar below")+'</text></g>');
+    '<text x="'+G.x+'" y="'+(G.y+14)+'" text-anchor="middle" class="nsub" style="font-size:10.5px">'+(S.prot?"visibility · posture · runtime: allow / hold for approval / block at the tool call":"turn on a layer above")+'</text></g>');
   NODES.forEach(function(n){
     if(n.id==="guard") return;
     var a=!!an[n.id], tg=tag(n.id);
