@@ -52,8 +52,19 @@ button.btn:focus-visible,.seg button:focus-visible,.chk:focus-visible,.dot:focus
 .chk .box{width:18px;height:18px;border-radius:5px;border:2px solid var(--border2);display:inline-flex;align-items:center;justify-content:center;font-size:13px;color:var(--bg)}
 .chk.on{border-color:var(--green);background:var(--greenSoft)}
 .chk.on .box{background:var(--green);border-color:var(--green)}
-.mode{font-size:13px;color:var(--text2)}
+.mode{font-size:13px;color:var(--text2);flex-basis:100%}
 .theme{font:600 13px var(--font)}
+.depth{margin-top:12px;border:1px solid var(--border);border-radius:14px;background:var(--panel);padding:10px 12px}
+.depth-h{font-weight:800;font-size:13px}
+.depth-h span{font-weight:500;color:var(--text3)}
+.depth-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.depth-item{display:flex;gap:8px;align-items:flex-start;flex:1 1 220px;min-width:0;font-size:13px;color:var(--text2);border:1px solid var(--border);border-radius:10px;padding:7px 8px}
+.depth-item b{color:var(--text)}
+.depth-item .tick{width:18px;height:18px;border-radius:5px;border:2px solid var(--border2);display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex:0 0 auto;color:transparent}
+.depth-item.on{border-color:var(--green);background:var(--greenSoft);color:var(--text)}
+.depth-item.on .tick{background:var(--green);border-color:var(--green);color:#fff}
+.depth-item.now{outline:2px solid var(--green);outline-offset:1px}
+.depth-out{margin:8px 0 0;font-size:13px;color:var(--text2)}
 .stage{margin-top:14px;border:1px solid var(--border);border-radius:16px;background:var(--panel);padding:8px}
 .stage svg{display:block;width:100%;height:auto}
 .dots{margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
@@ -134,9 +145,6 @@ body.present .card .dec,body.present .card .fin{font-size:20px}
     </div>
     <div class="hide-present"><button class="btn theme" id="themeBtn" type="button" aria-label="Switch color theme">Theme: auto</button></div>
   </header>
-  <p class="lede hide-present">An everyday request to a desktop AI assistant, “summarize this vendor contract and draft a reply,” passes through about thirty parts between your keyboard and the AI model. Watch every hop, see how hidden text in a PDF plus an unvetted plugin can quietly leak sensitive files, then replay it with a simplified Endpoint Control and Prevention (ECP) layer turned on.</p>
-  <div class="note hide-present"><b>Simulated, illustrative example.</b> The company, PDF, plugin, host names and policies in the scenario are fictional. The ECP layer is a simplified illustration, not a real product.</div>
-
   <h2 class="hide-present">Live flow</h2>
   <div class="controls" id="controls">
     <button class="btn primary" id="playBtn" type="button">Play</button>
@@ -145,48 +153,36 @@ body.present .card .dec,body.present .card .fin{font-size:20px}
     <div class="seg" id="speedSeg" role="group" aria-label="Speed">
       <button type="button" data-s="0.5">0.5×</button><button type="button" data-s="1" class="on">1×</button><button type="button" data-s="2">2×</button>
     </div>
-    <div class="chk" id="guardChk" role="checkbox" aria-checked="false" tabindex="0"><span class="box" id="guardBox"></span>Endpoint Control and Prevention (ECP)</div>
-    <span class="mode" id="modeLbl">Mode: unprotected (default)</span>
+    <div class="chk" id="ecpChk" role="checkbox" aria-checked="false" tabindex="0"><span class="box" id="ecpBox"></span>Endpoint Control and Prevention (ECP)</div>
+    <div class="chk" id="dnsChk" role="checkbox" aria-checked="false" tabindex="0"><span class="box" id="dnsBox"></span>Infoblox (DNS security)</div>
+    <div class="chk" id="netChk" role="checkbox" aria-checked="false" tabindex="0"><span class="box" id="netBox"></span>Kentik (network observability)</div>
+    <span class="mode" id="modeLbl">Mode: no extra controls (default)</span>
   </div>
   <div class="stage"><svg id="svg" viewBox="0 0 1280 590" role="img" aria-label="AI assistant request flow diagram"></svg></div>
+  <div class="depth" id="depth">
+    <div class="depth-h">Defense in depth <span>· same attack, three layers</span></div>
+    <div class="depth-row">
+      <div class="depth-item" id="depthEcp" title="ECP stops the attack at the tool call on the laptop, before the plugin can send the files. It is a generic illustration, not a vendor product."><span class="tick">✓</span><span><b>ECP</b> stops it at the tool call on the laptop</span></div>
+      <div class="depth-item" id="depthDns" title="Infoblox DNS security can flag or block the lookup of an unknown, newly seen, or risky domain before the connection is made. That can stop the upload at resolution time if policy or threat intel blocks the domain."><span class="tick">✓</span><span><b>Infoblox</b> can block the DNS lookup</span></div>
+      <div class="depth-item" id="depthNet" title="Kentik can detect and alert on the unusual outbound flow to an unfamiliar host, and can optionally trigger a response through integrations. It does not block the upload on the laptop."><span class="tick">✓</span><span><b>Kentik</b> detects and alerts on the unusual outbound flow</span></div>
+    </div>
+    <p class="depth-out" id="depthOut"></p>
+  </div>
   <div class="dots hide-present" id="dots"></div>
   <div class="card" id="card" aria-live="polite"></div>
-  <div class="explain hide-present">
-    <div class="box2"><span class="h">What is the “harness”?</span>The harness is the assistant's project manager: the work loop wrapped around the AI model. The model only reads and writes text; the harness does the doing. It repeats one cycle until the job is done:
-      <div class="loop"><span>1 · Gather context</span><i>→</i><span>2 · Ask the model</span><i>→</i><span>3 · Run the tool it asks for</span><i>→</i><span>4 · Check the result</span><i>→</i><span>5 · Repeat</span></div></div>
-    <div class="box2"><span class="h">What are the routers?</span><span class="h2">Office router (the network)</span>Every packet from the laptop passes through the home or office router and firewall. AI traffic is encrypted, so the router sees where traffic goes but not what it says.<span class="h2">Model router (the AI provider or gateway)</span>Before the model runs, a model router picks which model handles the request: a fast, low-cost one for simple jobs or a bigger reasoning model for hard ones.</div>
-    <div class="box2"><span class="h">Why a firewall or router alone can't catch this</span>The attack starts on the laptop: hidden text in a PDF steers the assistant, and a local plug-in reads files without touching the network. When the data finally leaves, it looks like ordinary encrypted web traffic. A router or firewall sees a sealed envelope going to a web address; the ECP layer sees which program did what, to which file, and for whom.</div>
-  </div>
-  <div class="hide-present" id="related">
-    <h2>Related tools</h2>
-    <p style="color:var(--text2);margin-top:-6px">The ECP layer in this demo sits on the laptop and can stop the plugin before an upload to the unknown host leaves the machine. If that traffic does leave, network-side tools can add a different kind of visibility. <a href="https://www.kentik.com/product/kentik-platform/" rel="noopener">Kentik</a> provides network observability and traffic analytics, such as spotting unusual flows toward an unknown host. <a href="https://www.infoblox.com/products/threat-defense/" rel="noopener">Infoblox</a> provides DNS security and DNS-layer threat defense, such as flagging lookups of unknown or risky domains. They complement the ECP layer. They are not endpoint products, and they are not the ECP layer itself.</p>
-    <p class="note">This demo is generic and educational, is not affiliated with or endorsed by Kentik or Infoblox, the ECP layer shown is a simplified illustration rather than any vendor's product, and names are trademarks of their respective owners.</p>
-  </div>
 
   <div class="hide-present">
     <h2>What each part does, in plain English</h2>
     <p class="d" style="color:var(--text2);margin-top:-6px">Hover any box in the diagram to see the same explanation. The small gray line is the technical name.</p>
     <div id="parts"></div>
 
-    <h2>Outcome, side by side</h2>
-    <div class="grid2">
-      <div class="panel"><h3>Without the ECP layer</h3><div id="outOff"></div></div>
-      <div class="panel"><h3>With Endpoint Control and Prevention (ECP)</h3><div id="outOn"></div></div>
+    <div id="related">
+      <h2>Related tools</h2>
+      <p style="color:var(--text2);margin-top:-6px">The same upload can be met at three different points. <b>ECP</b> is a generic control on the laptop and stops it at the tool call. <a href="https://www.infoblox.com/products/threat-defense/" rel="noopener">Infoblox</a> (DNS security) can block the DNS lookup of the unknown domain before the connection is made. <a href="https://www.kentik.com/product/kentik-platform/" rel="noopener">Kentik</a> (network observability) detects and alerts on the unusual outbound flow. It does not block the upload on the laptop. The network tools do not replace ECP.</p>
     </div>
 
-    <h2>What the ECP layer sees on this laptop (simulated inventory)</h2>
-    <div class="tblwrap"><table class="tbl" id="inv"></table></div>
-
-    <h2>Key takeaways</h2>
-    <ul class="take" id="take"></ul>
-
-    <h2>Every component, in one sentence</h2>
-    <details><summary>Show the glossary (plain-English name, technical name, where it runs)</summary>
-      <div class="tblwrap" style="margin-top:10px"><table class="tbl" id="gloss"></table></div>
-    </details>
-
     <footer>
-      Educational simulation only. Scenario names are fictional. The ECP layer is a simplified illustration and does not rank or endorse a product. Provided as-is with no warranty.<br>
+      Disclosure: the author works at Kentik / Infoblox. This is a personal, educational demo, not an official Kentik or Infoblox resource, and not endorsed by either company. The ECP layer is a simplified, generic illustration. Product names are trademarks of their respective owners.<br>
       Built by <a href="https://www.linkedin.com/in/martin-tully-37704170" rel="noopener">Martin Tully</a> · MIT License
     </footer>
   </div>
@@ -403,7 +399,7 @@ var STATIC=[];(function(){var seen={};STEPS.forEach(function(s){s.edges.forEach(
 
 var q=new URLSearchParams(location.search);
 var SHORT=q.get("captions")==="short";
-var S={prot:q.get("protected")==="1",idx:0,t:0,playing:false,once:false,speed:parseFloat(q.get("speed")||"1")||1};
+var S={prot:q.get("protected")==="1",dns:q.get("infoblox")==="1",net:q.get("kentik")==="1",idx:0,t:0,playing:false,once:false,speed:parseFloat(q.get("speed")||"1")||1};
 var manual=q.get("manual")==="1";
 if(q.get("present")==="1") document.body.classList.add("present");
 if(q.get("captions")==="short") document.body.classList.add("short");
@@ -437,7 +433,8 @@ function render(){
   var red=css("red"),green=css("green"),amber=css("amber"),blue=css("blue");
   var est={};
   st.forEach(function(s,i){ if(!s.bad||!has(s.id)||i===idx) return; if(S.prot&&s.verdict==="block") return; s.edges.forEach(function(e){est[ekey(e[0],e[1])]=S.prot?0.35:0.65;}); });
-  var blocked=S.prot&&cur.verdict==="block";
+  var dnsBlock=!S.prot&&S.dns&&cur.id==="s19";
+  var blocked=(S.prot&&cur.verdict==="block")||dnsBlock;
   var segs=blocked?[cur.edges[0]]:cur.edges;
   var cc=cur.guardOnly?green:cur.bad?red:blue;
   var packets=[],act=[];
@@ -449,12 +446,17 @@ function render(){
   var an={}; act.forEach(function(e){an[e[0]]=1;an[e[1]]=1;}); if(blocked) an[segs[0][1]]=0; if(S.prot&&cur.verdict&&tt>0.3) an.guard=1;
   function tag(id){
     if(id==="rag"&&has("s14")) return ["hidden text in PDF",red];
+    if(id==="attacker"&&has("s19")){
+      if(S.prot) return ["nothing received",green];
+      if(S.dns) return ["DNS lookup blocked",green];
+      if(S.net) return ["received · flow alerted",amber];
+      return ["payroll + passwords received",red];
+    }
     if(S.prot){
       if(id==="localMcp"&&has("s0")) return ["unvetted · flagged",amber];
       if(id==="harness"&&has("s0")) return ["no-ask connectors flagged",amber];
       if(id==="instr"&&has("s0")) return ["scanned",green];
       if(id==="secrets"&&has("s18")) return ["protected · read blocked",green];
-      if(id==="attacker"&&has("s19")) return ["nothing received",green];
       if(id==="siem"&&has("s20")) return ["attributed alert",green];
       if(id==="user"&&finished) return ["task done, files safe",green];
       return null;
@@ -462,8 +464,7 @@ function render(){
     if(id==="harness"&&has("s2")) return ["connectors run without asking",amber];
     if(id==="localMcp"&&has("s5")) return ["unvetted plugin",red];
     if(id==="secrets"&&has("s18")) return ["read by plugin",red];
-    if(id==="attacker"&&has("s19")) return ["payroll + passwords received",red];
-    if(id==="user"&&finished) return ["sees a normal answer",red];
+    if(id==="user"&&finished) return [S.dns?"files stayed home":"sees a normal answer",S.dns?green:red];
     return null;
   }
   var h=[];
@@ -495,13 +496,45 @@ function render(){
     var c=s.verdict==="allow"?green:s.verdict==="ask"?amber:red, w=s.badge.length*6.4+18;
     h.push('<g style="opacity:'+(i===idx?1:0.8)+'"><rect x="'+(s.bpos[0]-w/2)+'" y="'+(s.bpos[1]-10)+'" width="'+w+'" height="20" rx="10" style="fill:var(--panel);stroke:'+c+';stroke-width:1.6"/><text x="'+s.bpos[0]+'" y="'+(s.bpos[1]+4)+'" text-anchor="middle" style="font:800 10.5px var(--font);fill:'+c+'">'+esc(s.badge)+'</text></g>');
   });
+  function mark(x,y,name,tip,hgt){
+    hgt=hgt||18;
+    var label="✓ "+name, w=Math.ceil(label.length*6.5+16);
+    var x0=Math.max(6,Math.min(1274-w,x-w/2)), y0=y-hgt/2;
+    h.push('<g class="mark"><title>'+esc(tip)+'</title><rect x="'+x0+'" y="'+y0+'" width="'+w+'" height="'+hgt+'" rx="8" style="fill:var(--greenSoft);stroke:'+green+';stroke-width:1.6"/><text x="'+(x0+w/2)+'" y="'+(y0+hgt/2+4)+'" text-anchor="middle" style="font:800 11px var(--font);fill:'+green+'">'+esc(label)+'</text></g>');
+  }
+  var onTool=cur.id==="s17"||cur.id==="s18"||cur.id==="s19";
+  if(S.prot&&onTool) mark(860,256,"ECP","ECP stops this at the tool call on the laptop, before the plugin can send the files. Generic illustration, not a vendor product.");
+  if(cur.id==="s19"&&S.dns){
+    var dnsTip="Infoblox DNS security can flag or block the lookup of an unknown, newly seen, or risky domain before the connection is made. That can stop this upload at resolution time if policy or threat intel blocks the domain.";
+    if(S.prot) dnsTip+=" In this run ECP already stopped the tool call on the laptop, so the lookup is not made.";
+    mark(1162,444,"Infoblox",dnsTip,14);
+  }
+  if(cur.id==="s19"&&S.net){
+    var netTip="Kentik detects and alerts on the unusual outbound flow to an unfamiliar host. It can optionally trigger a response through integrations. It does not block the upload on the laptop.";
+    if(S.prot) netTip+=" In this run ECP already stopped the tool call, so no upload flow leaves the laptop.";
+    else if(S.dns) netTip+=" In this run Infoblox already blocked the DNS lookup, so there is no completed flow to alert on.";
+    mark(980,472,"Kentik",netTip);
+  }
   document.getElementById("svg").innerHTML=h.join("");
 
   // controls
   document.getElementById("playBtn").textContent=S.playing?"Pause":finished?"Replay":"Play";
-  var chk=document.getElementById("guardChk"); chk.classList.toggle("on",S.prot); chk.setAttribute("aria-checked",S.prot?"true":"false");
-  document.getElementById("guardBox").textContent=S.prot?"✓":"";
-  document.getElementById("modeLbl").textContent=S.prot?"Mode: protected by the ECP layer (same scenario)":"Mode: unprotected (default)";
+  function syncLayer(id,boxId,on){
+    var el=document.getElementById(id);
+    el.classList.toggle("on",on);
+    el.setAttribute("aria-checked",on?"true":"false");
+    document.getElementById(boxId).textContent=on?"✓":"";
+  }
+  syncLayer("ecpChk","ecpBox",S.prot);
+  syncLayer("dnsChk","dnsBox",S.dns);
+  syncLayer("netChk","netBox",S.net);
+  var bits=[]; if(S.prot) bits.push("ECP"); if(S.dns) bits.push("Infoblox"); if(S.net) bits.push("Kentik");
+  document.getElementById("modeLbl").textContent=bits.length?("Mode: "+bits.join(" + ")):"Mode: no extra controls (default)";
+  function depthItem(id,on,now){var el=document.getElementById(id); el.classList.toggle("on",on); el.classList.toggle("now",!!(on&&now));}
+  depthItem("depthEcp",S.prot,cur.id==="s17"||cur.id==="s18"||cur.id==="s19");
+  depthItem("depthDns",S.dns,cur.id==="s19");
+  depthItem("depthNet",S.net,cur.id==="s19");
+  document.getElementById("depthOut").textContent=outcomeSentence();
   Array.prototype.forEach.call(document.querySelectorAll("#speedSeg button"),function(b){b.classList.toggle("on",parseFloat(b.getAttribute("data-s"))===S.speed);});
   // dots
   var d=[]; st.forEach(function(s,i){
@@ -511,27 +544,56 @@ function render(){
   d.push('<span class="hint">Click a dot to jump to a step. Hover a box for what it does.</span>');
   document.getElementById("dots").innerHTML=d.join("");
   // card
-  var txt=S.prot&&cur.gtext?cur.gtext:cur.text;
+  var txt=cur.text;
+  if(S.prot&&cur.gtext) txt=cur.gtext;
+  else if(cur.id==="s19"&&S.dns&&S.net) txt="The plugin tries to upload the files to sync.pdfkit-cdn.example. Infoblox blocks the DNS lookup of that unknown domain before the connection is made, so the files stay on the laptop. Kentik is watching for unusual flows, but there is no completed upload to alert on.";
+  else if(cur.id==="s19"&&S.dns) txt="The plugin tries to upload the files to sync.pdfkit-cdn.example. Infoblox DNS security blocks the lookup of that unknown domain before the connection is made, so the upload does not start.";
+  else if(cur.id==="s19"&&S.net) txt="The plugin uploads the files over HTTPS to sync.pdfkit-cdn.example. The office router sees ordinary encrypted traffic. Kentik detects the unusual outbound flow to an unfamiliar host and raises an alert. It does not block the transfer, so the files still arrive.";
   var vc=cur.verdict==="allow"?"green":cur.verdict==="ask"?"amber":"red";
+  var decs=[];
+  if(!SHORT&&S.prot&&cur.verdict) decs.push('<div class="dec" style="color:var(--'+vc+')">ECP decision: '+(cur.verdict==="ask"?"HOLD FOR APPROVAL":cur.verdict.toUpperCase())+'</div>');
+  if(!SHORT&&cur.id==="s19"&&S.prot&&(S.dns||S.net)) decs.push('<div class="dec" style="color:var(--text2)">Later layers stay available: Infoblox can block the DNS lookup, and Kentik detects and alerts on a flow. This run was already stopped on the laptop.</div>');
+  if(!SHORT&&cur.id==="s19"&&!S.prot&&S.dns) decs.push('<div class="dec" style="color:var(--green)">Infoblox: blocked at the DNS lookup</div>');
+  if(!SHORT&&cur.id==="s19"&&!S.prot&&S.dns&&S.net) decs.push('<div class="dec" style="color:var(--text2)">Kentik is on, but the DNS block means there is no completed upload flow to alert on.</div>');
+  if(!SHORT&&cur.id==="s19"&&!S.prot&&!S.dns&&S.net) decs.push('<div class="dec" style="color:var(--amber)">Kentik: alert on the unusual flow. The upload is not blocked.</div>');
+  var finColor=S.prot||S.dns?green:S.net?amber:red;
   var c=document.getElementById("card"); c.style.borderLeftColor=cc;
   c.innerHTML='<div class="meta">STEP '+(idx+1)+' OF '+st.length+' · '+esc(cur.phase.toUpperCase())+(cur.bad?' · SIMULATED ATTACK':'')+'</div><div class="ttl">'+esc(cur.title)+'</div>'+(SHORT?'':'<div class="body">'+esc(txt)+'</div>')+
     (function(){var e=edLine(cur);return e.text?'<div class="ed"><span class="edk">In everyday terms'+(e.who?' · '+esc(e.who):'')+':</span> '+esc(e.text)+'</div>':'';})()+
-    (!SHORT&&S.prot&&cur.verdict?'<div class="dec" style="color:var(--'+vc+')">ECP decision: '+(cur.verdict==="ask"?"HOLD FOR APPROVAL":cur.verdict.toUpperCase())+'</div>':'')+
-    (finished?'<div class="fin" style="color:'+(S.prot?green:red)+'">'+(S.prot?"Outcome (simulated): the payroll file and saved passwords stayed on the laptop, the security team has an attributed alert, and the employee still got the summary and draft.":"Impact (simulated): the payroll spreadsheet and saved browser passwords reached sync.pdfkit-cdn.example, no alert fired, and the employee saw a normal summary and draft.")+'</div>':'');
+    decs.join("")+
+    (finished?'<div class="fin" style="color:var(--'+finColor+')">'+esc(outcomeSentence())+'</div>':'');
 }
 
 function go(i,t){S.idx=i;S.t=t;}
 function play(){ if(S.playing){S.playing=false;render();return;} var st=steps(); if(S.idx>=st.length-1&&S.t>=1) go(0,0); S.once=false;S.playing=true;render(); }
 function step(){ S.playing=false; if(S.t>=1){ if(S.idx<steps().length-1) go(S.idx+1,0); else {render();return;} } S.once=true; render(); }
 function reset(){S.playing=false;S.once=false;go(0,0);render();}
-function setProt(v,autoplay){S.prot=!!v;S.once=false;go(0,0);S.playing=autoplay!==false;render();}
+function replay(autoplay){S.once=false;go(0,0);S.playing=autoplay!==false;render();}
+function setProt(v,autoplay){S.prot=!!v;replay(autoplay);}
+function setDns(v,autoplay){S.dns=!!v;replay(autoplay);}
+function setNet(v,autoplay){S.net=!!v;replay(autoplay);}
+function outcomeSentence(){
+  if(S.prot){
+    var later=[]; if(S.dns) later.push("Infoblox"); if(S.net) later.push("Kentik");
+    return "Outcome (simulated): ECP stopped the attack at the tool call on the laptop, so the files never left."+(later.length?" "+later.join(" and ")+" "+(later.length>1?"are later layers":"is a later layer")+" and "+(later.length>1?"were":"was")+" not needed for this run.":"");
+  }
+  if(S.dns&&S.net) return "Outcome (simulated): Infoblox blocked the upload at the DNS lookup of the unknown domain, so the connection was not made. Kentik did not see a completed outbound flow to alert on.";
+  if(S.dns) return "Outcome (simulated): Infoblox blocked the upload at the DNS lookup of the unknown domain. The files stayed on the laptop.";
+  if(S.net) return "Outcome (simulated): the upload still happened. Kentik detected the unusual outbound flow to an unfamiliar host and raised an alert. Kentik did not block the transfer.";
+  return "Impact (simulated): the payroll spreadsheet and saved browser passwords reached sync.pdfkit-cdn.example, no alert fired, and the employee saw a normal summary and draft.";
+}
 document.getElementById("playBtn").addEventListener("click",play);
 document.getElementById("stepBtn").addEventListener("click",step);
 document.getElementById("resetBtn").addEventListener("click",reset);
 document.getElementById("speedSeg").addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;S.speed=parseFloat(b.getAttribute("data-s"));render();});
-var chk=document.getElementById("guardChk");
-chk.addEventListener("click",function(){setProt(!S.prot);});
-chk.addEventListener("keydown",function(e){if(e.key===" "||e.key==="Enter"){e.preventDefault();setProt(!S.prot);}});
+function bindChk(id,get,set){
+  var el=document.getElementById(id);
+  el.addEventListener("click",function(){set(!get());});
+  el.addEventListener("keydown",function(e){if(e.key===" "||e.key==="Enter"){e.preventDefault();set(!get());}});
+}
+bindChk("ecpChk",function(){return S.prot;},setProt);
+bindChk("dnsChk",function(){return S.dns;},setDns);
+bindChk("netChk",function(){return S.net;},setNet);
 document.getElementById("dots").addEventListener("click",function(e){var b=e.target.closest(".dot");if(!b)return;S.playing=false;go(parseInt(b.getAttribute("data-i"),10),0);S.once=true;render();});
 
 // theme toggle
@@ -542,51 +604,21 @@ try{var saved=localStorage.getItem("abc-theme"); if(saved&&themes.indexOf(saved)
 if(q.get("theme")&&themes.indexOf(q.get("theme"))>=0) ti=themes.indexOf(q.get("theme"));
 tb.addEventListener("click",function(){ti=(ti+1)%themes.length; try{localStorage.setItem("abc-theme",themes[ti]);}catch(e){} applyTheme();});
 
-// static sections
-function row(t,d,label,kind){return '<div class="row"><div><div class="t">'+esc(t)+'</div><div class="d">'+esc(d)+'</div></div>'+(label?'<span class="pill '+kind+'">'+esc(label)+'</span>':'')+'</div>';}
-document.getElementById("outOff").innerHTML=[
- row("Hidden text in the vendor PDF","Read and followed; invisible to the employee","Missed","bad"),
- row("Unvetted PDF plugin","Ran on the laptop, invisible to the network","Missed","bad"),
- row("Payroll spreadsheet and saved passwords","Opened by the plugin","Leaked","bad"),
- row("Upload to unknown host","Disguised as a plugin “sync”","Succeeded","bad"),
- row("Security team visibility","No alert, nothing tying the leak to the assistant","None","bad"),
- row("What the employee saw","A normal summary and a polite draft reply")].join("");
-document.getElementById("outOn").innerHTML=[
- row("Unvetted PDF plugin","In the laptop inventory, flagged by posture before the question","Flagged","warn"),
- row("Email connector call","Approved connector; normal work keeps flowing","Allowed","good"),
- row("Plugin tool call","Held for approval; approved in this simulation","Held","warn"),
- row("Read of payroll file and passwords","Sensitive files and credentials protected","Blocked","good"),
- row("Upload to unknown host","Unrecognized destination for the plugin's process","Blocked","good"),
- row("Security team visibility","SIEM alert: employee, assistant, helper agent, plugin, file","Alerted","good"),
- row("What the employee saw","The same summary and draft; the task finished")].join("");
-var inv=[["Desktop AI assistant","AI app / agent","Posture: connectors run without asking","w"],["Helper agent","Sub-agent","Tied to the assistant and the employee",""],["PDF Toolkit Pro","Third-party plugin (local MCP)","Unvetted; broad file and internet access","w"],["Email connector","Approved connector (remote MCP)","In inventory",""],["Files connector","Approved connector (local MCP)","In inventory",""],["Office and browser add-ins","Extensions","In inventory",""],["instructions.md, memory.md","Instruction and memory files","Scanned for risky instructions",""],["Payroll_2026.xlsx, saved browser passwords","Sensitive files and credentials","Protected by policy","g"]];
-document.getElementById("inv").innerHTML='<thead><tr><th>Component</th><th>Type</th><th>ECP view in this demo</th></tr></thead><tbody>'+inv.map(function(r){return '<tr><td>'+esc(r[0])+'</td><td>'+esc(r[1])+'</td><td class="'+r[3]+'">'+esc(r[2])+'</td></tr>';}).join("")+'</tbody>';
-var take=[
- ["AI assistants act, not just answer","Connectors and plugins let an assistant read files, open email, browse and run tools with your permissions."],
- ["Everyday content can carry instructions","Hidden text in a PDF, email or web page can steer the model. This is called indirect prompt injection."],
- ["Plugins and connectors are software you install","An unvetted plugin runs with the employee's access. Know what is installed and what it can reach."],
- ["The riskiest steps never cross the network","A local plugin reading a local file makes no web request, so proxies and AI gateways can't see it."],
- ["Decide at the tool call","Allow, hold for approval, or block each action before it runs, not after the fact."],
- ["Layer the controls","People can be fooled into approving. Protection for sensitive files and blocks on unknown hosts still have to hold."],
- ["Tie every action to who caused it","Employee → assistant → helper agent → plugin → file, sent to the SIEM, so the team can respond."],
- ["This isn't only a developer problem","Finance, HR and operations staff use desktop AI assistants every day with real business data."],
- ["Security shouldn't stop the work","In the protected run the employee still gets the summary and draft; only the risky actions are stopped."]
-];
-document.getElementById("take").innerHTML=take.map(function(t){return '<li><b>'+esc(t[0])+'</b><span>'+esc(t[1])+'</span></li>';}).join("");
 (function(){var groups=[["You and your laptop",["user","agentApp","harness","instr","sysprompt","skills","memory","context","rag","vector","ext","subagent","registry","mcpClient","builtins","filesMcp","localMcp","secrets","guard"]],["The network",["router","gateway","egress"]],["The AI provider and other online services",["api","mrouter","tokenizer","transformer","sampler","remoteMcp","attacker","siem"]]];
  document.getElementById("parts").innerHTML=groups.map(function(g){return '<div class="pgroup"><h3>'+esc(g[0])+'</h3><div class="pgrid">'+g[1].map(function(id){var n=NODE[id];return '<div class="pc"><div class="n">'+esc(n.title)+'</div><div class="tn">'+esc(n.tech)+'</div><div class="e">'+esc(EDAY[id])+'</div></div>';}).join("")+'</div></div>';}).join("");})();
-document.getElementById("gloss").innerHTML='<thead><tr><th>Component</th><th>Technical name</th><th>Where</th><th>What it does</th></tr></thead><tbody>'+NODES.map(function(n){return '<tr><td>'+esc(n.title)+'</td><td>'+esc(n.tech)+'</td><td>'+esc(n.where)+'</td><td>'+esc(COMP[n.id])+'</td></tr>';}).join("")+'</tbody>';
 
 // public hooks (used for the video capture; harmless otherwise)
 window.behindTheCurtain={
   setProtected:function(v,auto){setProt(v,auto);},
+  setInfoblox:function(v,auto){setDns(v,auto);},
+  setKentik:function(v,auto){setNet(v,auto);},
   play:function(){S.once=false;S.playing=true;render();},
   pause:function(){S.playing=false;render();},
   reset:reset,
   setSpeed:function(v){S.speed=v;render();},
   tick:function(ms){var n=Math.ceil(ms/16);for(var i=0;i<n;i++)advance(ms/n);render();},
   jump:function(i,t){S.playing=false;go(i,t==null?0:t);render();},
-  state:function(){var st=steps();return {idx:S.idx,t:S.t,playing:S.playing,count:st.length,finished:S.idx>=st.length-1&&S.t>=1,title:st[Math.min(S.idx,st.length-1)].title};}
+  state:function(){var st=steps();return {idx:S.idx,t:S.t,playing:S.playing,count:st.length,finished:S.idx>=st.length-1&&S.t>=1,title:st[Math.min(S.idx,st.length-1)].title,ecp:S.prot,dns:S.dns,net:S.net};}
 };
 applyTheme();
 if(q.get("autoplay")==="1"){S.playing=true;}
