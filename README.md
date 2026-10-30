@@ -1,6 +1,6 @@
 # What Happens Behind the AI Curtain
 
-An everyday request to a desktop AI assistant, like “summarize the contract PDF a vendor emailed me and draft a reply,” passes through about thirty parts before the answer comes back. These include custom instructions, memory, skills, the agent harness (its work loop), helper agents, a tool menu, MCP connectors, document search, the office router, an AI gateway, a model router, and the model's tokenizer, transformer and word-by-word writer. This single-page, animated simulation shows every hop in plain English, with the technical name beside each one. It then shows how hidden text in a PDF and an unvetted plugin can quietly send payroll data and saved passwords to an unknown host. Finally, it replays the same scenario with a generic **Endpoint AI Security Agent** turned on, which adds inventory, posture checks, allow / hold-for-approval / block decisions at the tool call, sensitive-file protection, blocking of unknown upload hosts, and SIEM alerts.
+An everyday request to a desktop AI assistant, like “summarize the contract PDF a vendor emailed me and draft a reply,” passes through about thirty parts before the answer comes back. These include custom instructions, memory, skills, the agent harness (its work loop), helper agents, a tool menu, MCP connectors, document search, the office router, an AI gateway, a model router, and the model's tokenizer, transformer and word-by-word writer. This single-page, animated simulation shows every hop in plain English, with the technical name beside each one. It then shows how hidden text in a PDF and an unvetted plugin can quietly send payroll data and saved passwords to an unknown host. Finally, it replays the same scenario with a generic **Endpoint Control and Prevention (ECP)** layer turned on, which adds inventory, posture checks, allow / hold-for-approval / block decisions at the tool call, sensitive-file protection, blocking of unknown upload hosts, and SIEM alerts.
 
 **Live demo:** https://edragon12.github.io/ai-behind-the-curtain/
 
@@ -23,15 +23,17 @@ You don't need a technical background. Every box in the diagram also has an **�
 - **The AI gateway.** The company's front gate for AI traffic. It sees what goes out, not what happens on your laptop.
 - **The AI provider and model router.** The reception desk that checks your account, and a dispatcher that sends the job to a quick, cheap model or a bigger reasoning model.
 - **Tokenizer, transformer and word-by-word writer.** The model chops your words into puzzle pieces, looks at all of them at once, then writes the answer one piece at a time, like super-charged autocomplete.
-- **The endpoint AI security agent.** A security guard on the laptop who checks each action before it happens: allow, ask a person first, or block.
+- **Endpoint Control and Prevention (ECP).** A security guard on the laptop who checks each action before it happens: allow, ask a person first, or block.
 
-**Why a firewall or router can't catch this attack on its own:** the trick happens *on the laptop*. Hidden text in a PDF steers the assistant, and a local plug-in reads files without any network traffic. By the time data leaves, it looks like ordinary encrypted web traffic. Only something on the endpoint can see which program touched which file, and for whom.
+**Why a firewall or router can't catch this attack on its own:** the trick happens *on the laptop*. Hidden text in a PDF steers the assistant, and a local plug-in reads files without any network traffic. By the time data leaves, it looks like ordinary encrypted web traffic. Only something on the endpoint, such as the ECP layer, can see which program touched which file, and for whom.
+
+**Related tools.** From the network side, not as the ECP layer itself: [Kentik](https://www.kentik.com/product/kentik-platform/) (network observability and traffic analytics, such as unusual flows to an unknown host) and [Infoblox](https://www.infoblox.com/products/threat-defense/) (DNS security and DNS-layer threat defense, such as lookups of unknown or risky domains). This demo is generic and educational, is not affiliated with or endorsed by Kentik or Infoblox, the ECP layer shown is a simplified illustration rather than any vendor's product, and names are trademarks of their respective owners.
 
 ## What you can do on the page
 
 - **Play / Pause / Step / Reset** and change the speed (0.5×, 1×, 2×).
 - Click any step dot to jump to that step, and hover over any box for its plain-English and technical explanation.
-- Tick **Endpoint AI Security Agent** to replay the same scenario with protection.
+- Tick **Endpoint Control and Prevention (ECP)** to replay the same scenario with protection.
 - Compare the **outcome** side by side, and read the simulated **inventory**, the **key takeaways** and the full **glossary**.
 - The page follows your system's light or dark setting. Use the Theme button to override it.
 
@@ -54,7 +56,7 @@ Optional URL parameters: `?protected=1` (start in protected mode), `?autoplay=1`
 
 ## Disclaimer
 
-This is an **educational simulation**. The company, vendor, PDF, plugin, host names, policies and outcomes are **fictional** and simplified for teaching. The project is **not affiliated with, sponsored by or endorsed by any vendor**, and doesn't describe or rate any real product. Product categories such as “desktop AI assistant” and “MCP connector” are used generically. It is provided **as-is, with no warranty**; see [LICENSE](LICENSE).
+This is an **educational simulation**. The company, PDF, plugin, host names, policies and outcomes in the scenario are **fictional** and simplified for teaching. The project is **not affiliated with, sponsored by or endorsed by any vendor**, and doesn't rate any real product. The ECP layer is a simplified illustration. Product categories such as “desktop AI assistant” and “MCP connector” are used generically. It is provided **as-is, with no warranty**; see [LICENSE](LICENSE).
 
 ## Author
 
