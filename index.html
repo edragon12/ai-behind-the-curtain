@@ -79,41 +79,7 @@ button.btn:focus-visible,.seg button:focus-visible,.chk:focus-visible,.dot:focus
 .card .edk{font-weight:800;color:var(--amber)}
 .card .dec{margin-top:8px;font-weight:800;font-size:14px}
 .card .fin{margin-top:10px;font-weight:700;font-size:15px}
-.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
-.panel{border:1px solid var(--border);border-radius:14px;background:var(--panel);padding:16px 18px}
-.panel h3{margin:0 0 10px;font-size:17px}
-.row{display:flex;gap:10px;justify-content:space-between;padding:9px 0;border-top:1px solid var(--border)}
-.row:first-of-type{border-top:0}
-.row .t{font-weight:600;font-size:14px}
-.row .d{font-size:13px;color:var(--text2)}
-.pill{font-size:12px;font-weight:800;white-space:nowrap;align-self:flex-start;padding:2px 9px;border-radius:999px}
-.pill.bad{color:var(--red);background:var(--redSoft)}.pill.good{color:var(--green);background:var(--greenSoft)}.pill.warn{color:var(--amber);background:var(--amberSoft)}
-.tbl{width:100%;border-collapse:collapse;font-size:14px;background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden}
-.tblwrap{overflow-x:auto}
-.tbl th,.tbl td{text-align:left;padding:9px 12px;border-top:1px solid var(--border);vertical-align:top}
-.tbl th{font-size:12px;color:var(--text3);font-weight:700;background:var(--panel2);border-top:0}
-.tbl td.g{color:var(--green);font-weight:700}.tbl td.w{color:var(--amber);font-weight:700}
-.take{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
-.take li{border:1px solid var(--border);background:var(--panel);border-radius:12px;padding:12px 14px}
-.take b{display:block;margin-bottom:3px}
-.take span{color:var(--text2);font-size:14px}
-details{margin-top:8px}
-summary{cursor:pointer;font-weight:700;font-size:16px;padding:6px 0}
-footer{margin-top:50px;padding-top:18px;border-top:1px solid var(--border);color:var(--text3);font-size:13px}
-/* svg */
-.explain{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px;margin-top:14px}
-.explain .box2{border:1px solid var(--border);border-radius:12px;background:var(--panel);padding:12px 16px;font-size:14px;color:var(--text2)}
-.explain .box2 .h{color:var(--text);display:block;font-weight:700;font-size:15px;margin-bottom:4px}
-.explain .box2 .h2{color:var(--text);display:block;font-weight:700;font-size:14px;margin:8px 0 2px}
-.loop{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:8px}
-.loop span{background:var(--blueSoft);color:var(--text);border-radius:999px;padding:2px 10px;font-size:13px;font-weight:600}
-.loop i{font-style:normal;color:var(--text3)}
-.pgroup h3{font-size:16px;margin:22px 0 10px;color:var(--text2)}
-.pgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:10px}
-.pc{border:1px solid var(--border);border-radius:12px;background:var(--panel);padding:11px 14px}
-.pc .n{font-weight:700}
-.pc .tn{font-size:12px;color:var(--text3);margin-top:1px}
-.pc .e{font-size:14px;color:var(--text2);margin-top:6px}
+footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color:var(--text3);font-size:13px}
 .zone{fill:var(--panel2);stroke:var(--border)}
 .zlabel{fill:var(--text3);font:700 11px var(--font);letter-spacing:.08em}
 .edge{fill:none;stroke:var(--border2);stroke-width:1.2}
@@ -171,16 +137,9 @@ body.present .card .dec,body.present .card .fin{font-size:20px}
   <div class="dots hide-present" id="dots"></div>
   <div class="card" id="card" aria-live="polite"></div>
 
-  <div class="hide-present">
-    <h2>What each part does, in plain English</h2>
-    <p class="d" style="color:var(--text2);margin-top:-6px">Hover any box in the diagram to see the same explanation. The small gray line is the technical name.</p>
-    <div id="parts"></div>
-
-    <div id="related">
-      <h2>Related tools</h2>
-      <p style="color:var(--text2);margin-top:-6px">The same upload can be met at three different points. <b>ECP</b> is a generic control on the laptop and stops it at the tool call. <a href="https://www.infoblox.com/products/threat-defense/" rel="noopener">Infoblox</a> (DNS security) can block the DNS lookup of the unknown domain before the connection is made. <a href="https://www.kentik.com/product/kentik-platform/" rel="noopener">Kentik</a> (network observability) detects and alerts on the unusual outbound flow. It does not block the upload on the laptop. The network tools do not replace ECP.</p>
-    </div>
-
+  <div class="hide-present" id="related">
+    <h2>Related tools</h2>
+    <p style="color:var(--text2);margin-top:-6px">The same upload can be met at three different points. <b>ECP</b> is a generic control on the laptop and stops it at the tool call. <a href="https://www.infoblox.com/products/threat-defense/" rel="noopener">Infoblox</a> (DNS security) can block the DNS lookup of the unknown domain before the connection is made. <a href="https://www.kentik.com/product/kentik-platform/" rel="noopener">Kentik</a> (network observability) detects and alerts on the unusual outbound flow. It does not block the upload on the laptop. The network tools do not replace ECP.</p>
     <footer>
       Disclosure: the author works at Kentik / Infoblox. This is a personal, educational demo, not an official Kentik or Infoblox resource, and not endorsed by either company. The ECP layer is a simplified, generic illustration. Product names are trademarks of their respective owners.<br>
       Built by <a href="https://www.linkedin.com/in/martin-tully-37704170" rel="noopener">Martin Tully</a> · MIT License
@@ -603,9 +562,6 @@ function applyTheme(){var t=themes[ti]; if(t==="auto") document.documentElement.
 try{var saved=localStorage.getItem("abc-theme"); if(saved&&themes.indexOf(saved)>=0) ti=themes.indexOf(saved);}catch(e){}
 if(q.get("theme")&&themes.indexOf(q.get("theme"))>=0) ti=themes.indexOf(q.get("theme"));
 tb.addEventListener("click",function(){ti=(ti+1)%themes.length; try{localStorage.setItem("abc-theme",themes[ti]);}catch(e){} applyTheme();});
-
-(function(){var groups=[["You and your laptop",["user","agentApp","harness","instr","sysprompt","skills","memory","context","rag","vector","ext","subagent","registry","mcpClient","builtins","filesMcp","localMcp","secrets","guard"]],["The network",["router","gateway","egress"]],["The AI provider and other online services",["api","mrouter","tokenizer","transformer","sampler","remoteMcp","attacker","siem"]]];
- document.getElementById("parts").innerHTML=groups.map(function(g){return '<div class="pgroup"><h3>'+esc(g[0])+'</h3><div class="pgrid">'+g[1].map(function(id){var n=NODE[id];return '<div class="pc"><div class="n">'+esc(n.title)+'</div><div class="tn">'+esc(n.tech)+'</div><div class="e">'+esc(EDAY[id])+'</div></div>';}).join("")+'</div></div>';}).join("");})();
 
 // public hooks (used for the video capture; harmless otherwise)
 window.behindTheCurtain={

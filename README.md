@@ -8,7 +8,7 @@ An everyday request to a desktop AI assistant, like “summarize the contract PD
 
 ## New to AI? Start here
 
-You don't need a technical background. Every box in the diagram also has an **“In everyday terms”** line, and the page has a plain-English card for each part. In short:
+You don't need a technical background. Hover any box in the diagram for an **“In everyday terms”** line and the technical name. In short:
 
 - **You and the AI assistant app.** You ask for help the way you'd ask a coworker; the app is the front desk where the request comes in.
 - **The harness (the assistant's project manager).** It runs a loop: gather context → ask the model → run the tool the model asks for → check the result → repeat until the job is done.
@@ -34,7 +34,6 @@ You don't need a technical background. Every box in the diagram also has an **�
 - **Play / Pause / Step / Reset** and change the speed (0.5×, 1×, 2×).
 - Click any step dot to jump to that step, and hover over any box for its plain-English and technical explanation.
 - Tick **Endpoint Control and Prevention (ECP)**, **Infoblox (DNS security)**, and **Kentik (network observability)** on their own or together. Each replays the scenario and shows a check at the step it covers.
-- Read the plain-English card for each part under the diagram.
 - The page follows your system's light or dark setting. Use the Theme button to override it.
 
 ## Run it locally
