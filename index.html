@@ -13,6 +13,7 @@
   --text:#e8edf6;--text2:#b4bfd2;--text3:#7f8ba3;
   --blue:#5aa2ff;--red:#ff5c6c;--green:#3ddc97;--amber:#ffc35a;
   --blueSoft:rgba(90,162,255,.16);--redSoft:rgba(255,92,108,.16);--greenSoft:rgba(61,220,151,.14);--amberSoft:rgba(255,195,90,.14);
+  --kentik:#D3400F;--kentikSoft:rgba(211,64,15,.18);
   --font:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
   --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
 }
@@ -52,7 +53,11 @@ button.btn:focus-visible,.seg button:focus-visible,.chk:focus-visible,.dot:focus
 .chk{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:8px;border:1.5px solid var(--border2);cursor:pointer;font-weight:700;font-size:13px;user-select:none;max-width:100%}
 .chk .box{width:18px;height:18px;border-radius:5px;border:2px solid var(--border2);display:inline-flex;align-items:center;justify-content:center;font-size:13px;color:var(--bg)}
 .chk.on{border-color:var(--green);background:var(--greenSoft)}
-.chk.on .box{background:var(--green);border-color:var(--green)}
+.chk.on .box{background:var(--green);border-color:var(--green);color:#fff}
+#netChk.on{border-color:var(--kentik);background:var(--kentikSoft)}
+#netChk.on .box{background:var(--kentik);border-color:var(--kentik);color:#fff8f4}
+#depthNet.on{border-color:var(--kentik);background:var(--kentikSoft)}
+#depthNet.on .tick{background:var(--kentik);border-color:var(--kentik);color:#fff8f4}
 .mode{font-size:12px;line-height:1.2;color:var(--text2);flex-basis:100%}
 .theme{font:600 13px var(--font)}
 .depth{margin-top:12px;border:1px solid var(--border);border-radius:14px;background:var(--panel);padding:10px 12px}
@@ -68,6 +73,23 @@ button.btn:focus-visible,.seg button:focus-visible,.chk:focus-visible,.dot:focus
 .depth-out{margin:8px 0 0;font-size:13px;color:var(--text2)}
 .stage{margin-top:6px;border:1px solid var(--border);border-radius:12px;background:var(--panel);padding:4px}
 .stage svg{display:block;width:100%;height:auto}
+#fx{pointer-events:none}
+.burst{transform-box:fill-box;transform-origin:center;animation:comic-pop .9s cubic-bezier(.15,1.35,.35,1) forwards}
+.burst text{font-family:Impact,"Arial Black","Segoe UI",sans-serif}
+.burst.ecp text{fill:#042018}
+:root[data-theme="light"] .burst.ecp text{fill:#fff}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]) .burst.ecp text{fill:#fff}
+}
+@keyframes comic-pop{
+  0%{transform:scale(.12) rotate(-18deg);opacity:0}
+  42%{transform:scale(1.08) rotate(8deg);opacity:1}
+  68%{transform:scale(.9) rotate(-4deg);opacity:1}
+  100%{transform:scale(.56) rotate(-7deg);opacity:1}
+}
+@media (prefers-reduced-motion:reduce){
+  .burst{animation:none;transform:scale(.56) rotate(-7deg);opacity:1}
+}
 .dots{margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 .dot{width:14px;height:14px;border-radius:7px;border:1px solid var(--border2);cursor:pointer;background:transparent;padding:0}
 .dot.cur{width:26px}
@@ -105,9 +127,13 @@ body.present .card .dec,body.present .card .fin{font-size:20px}
   body:not(.present) .fit{height:100vh;box-sizing:border-box;padding:8px 0 6px;display:flex;flex-direction:column;min-height:0}
   body:not(.present) .stage{position:relative;flex:1 1 auto;min-height:0;margin-top:4px}
   body:not(.present) .stage svg{position:absolute;left:4px;top:4px;width:calc(100% - 8px);height:calc(100% - 8px);max-width:none;max-height:none}
-  body:not(.present) .card{min-height:132px}
+  body:not(.present) .card{min-height:150px}
 }
-@media (max-width:820px){ .stage{overflow-x:auto} .stage svg{min-width:980px;position:static;max-height:none} }
+@media (max-width:820px){
+  .stage{position:relative;overflow-x:auto}
+  .stage svg{min-width:980px;position:static;max-height:none}
+  #fx{position:absolute;left:0;top:0;height:100%;min-width:980px}
+}
 </style>
 </head>
 <body>
@@ -134,7 +160,7 @@ body.present .card .dec,body.present .card .fin{font-size:20px}
     <div class="chk" id="netChk" role="checkbox" aria-checked="false" tabindex="0"><span class="box" id="netBox"></span>Kentik (network observability)</div>
     <span class="mode" id="modeLbl">Mode: no extra controls (default)</span>
   </div>
-  <div class="stage"><svg id="svg" viewBox="0 0 1280 590" preserveAspectRatio="xMidYMid meet" role="img" aria-label="AI assistant request flow diagram"></svg></div>
+  <div class="stage"><svg id="svg" viewBox="0 0 1280 590" preserveAspectRatio="xMidYMid meet" role="img" aria-label="AI assistant request flow diagram"></svg><svg id="fx" viewBox="0 0 1280 590" preserveAspectRatio="xMidYMid meet" aria-hidden="true"></svg></div>
 </div>
   <div class="depth" id="depth">
     <div class="depth-h">Defense in depth <span>· same attack, three layers</span></div>
@@ -418,9 +444,10 @@ function render(){
     if(id==="attacker"&&has("s19")){
       if(S.prot) return ["nothing received",green];
       if(S.dns) return ["DNS lookup blocked",green];
-      if(S.net) return ["received · flow alerted",amber];
+      if(S.net) return ["received · flow alerted","var(--kentik)"];
       return ["payroll + passwords received",red];
     }
+    if(id==="siem"&&S.net&&(has("s19")||cur.id==="s19")) return ["Kentik alert","var(--kentik)"];
     if(S.prot){
       if(id==="localMcp"&&has("s0")) return ["unvetted · flagged",amber];
       if(id==="harness"&&has("s0")) return ["no-ask connectors flagged",amber];
@@ -433,7 +460,11 @@ function render(){
     if(id==="harness"&&has("s2")) return ["connectors run without asking",amber];
     if(id==="localMcp"&&has("s5")) return ["unvetted plugin",red];
     if(id==="secrets"&&has("s18")) return ["read by plugin",red];
-    if(id==="user"&&finished) return [S.dns?"files stayed home":"sees a normal answer",S.dns?green:red];
+    if(id==="user"&&finished){
+      if(S.dns) return ["files stayed home",green];
+      if(S.net) return ["answer shown, team alerted","var(--kentik)"];
+      return ["sees a normal answer",red];
+    }
     return null;
   }
   var h=[];
@@ -478,13 +509,22 @@ function render(){
     if(S.prot) dnsTip+=" In this run ECP already stopped the tool call on the laptop, so the lookup is not made.";
     mark(1162,444,"Infoblox",dnsTip,14);
   }
-  if(cur.id==="s19"&&S.net){
-    var netTip="Kentik detects and alerts on the unusual outbound flow to an unfamiliar host. It can optionally trigger a response through integrations. It does not block the upload on the laptop.";
-    if(S.prot) netTip+=" In this run ECP already stopped the tool call, so no upload flow leaves the laptop.";
-    else if(S.dns) netTip+=" In this run Infoblox already blocked the DNS lookup, so there is no completed flow to alert on.";
-    mark(980,472,"Kentik",netTip);
+  var kentikOn=S.net&&(cur.id==="s19"||has("s19"));
+  if(kentikOn){
+    var kTip=S.dns?"Kentik flagged the attempted connection and the suspicious plugin traffic, then alerted the security team. Infoblox blocked the DNS lookup, so the upload did not complete.":"Kentik flagged an unusual outbound flow toward the unknown host and alerted the security team. It does not block the upload on the laptop.";
+    h.push('<path d="M980,335 C990,430 1040,500 1082,522" style="fill:none;stroke:var(--kentik);stroke-width:2.8;stroke-dasharray:7 4"/>');
+    h.push('<g><title>'+esc(kTip)+'</title><rect x="900" y="338" width="160" height="30" rx="6" style="fill:var(--kentik);stroke:#4a1506;stroke-width:1.2"/><text x="980" y="350" text-anchor="middle" style="font:800 9px var(--font);fill:#fff8f4">Kentik: unusual outbound</text><text x="980" y="362" text-anchor="middle" style="font:800 9px var(--font);fill:#fff8f4">flow flagged</text></g>');
+    h.push('<text x="1054" y="386" text-anchor="middle" style="font:800 11px var(--font);fill:var(--kentik)">Kentik alert</text>');
+    var Sm=NODE.siem;
+    h.push('<rect x="'+(Sm.x-Sm.w/2-3)+'" y="'+(Sm.y-Sm.h/2-3)+'" width="'+(Sm.w+6)+'" height="'+(Sm.h+6)+'" rx="11" style="fill:rgba(211,64,15,.14);stroke:var(--kentik);stroke-width:3"/>');
   }
   document.getElementById("svg").innerHTML=h.join("");
+  var showE=S.prot&&onTool, showI=!!(S.dns&&cur.id==="s19"), showK=!!(S.net&&cur.id==="s19");
+  var sig=(showE?"E":"")+(showI?"I":"")+(showK?"K":"");
+  if(render.fx!==sig){
+    render.fx=sig;
+    document.getElementById("fx").innerHTML=(showE?burst(150,360,"ecp"):"")+(showK?burst(900,258,"kt"):"")+(showI?burst(1162,455,"ib"):"");
+  }
 
   // controls
   document.getElementById("playBtn").textContent=S.playing?"Pause":finished?"Replay":"Play";
@@ -515,16 +555,15 @@ function render(){
   // card
   var txt=cur.text;
   if(S.prot&&cur.gtext) txt=cur.gtext;
-  else if(cur.id==="s19"&&S.dns&&S.net) txt="The plugin tries to upload the files to sync.pdfkit-cdn.example. Infoblox blocks the DNS lookup of that unknown domain before the connection is made, so the files stay on the laptop. Kentik is watching for unusual flows, but there is no completed upload to alert on.";
+  else if(cur.id==="s19"&&S.dns&&S.net) txt="The plugin tries to reach sync.pdfkit-cdn.example. Infoblox blocks that DNS lookup, so the files stay on the laptop. Kentik still flags the attempted connection and the suspicious plugin traffic, and sends an alert to the security team.";
   else if(cur.id==="s19"&&S.dns) txt="The plugin tries to upload the files to sync.pdfkit-cdn.example. Infoblox DNS security blocks the lookup of that unknown domain before the connection is made, so the upload does not start.";
-  else if(cur.id==="s19"&&S.net) txt="The plugin uploads the files over HTTPS to sync.pdfkit-cdn.example. The office router sees ordinary encrypted traffic. Kentik detects the unusual outbound flow to an unfamiliar host and raises an alert. It does not block the transfer, so the files still arrive.";
+  else if(cur.id==="s19"&&S.net) txt="The plugin uploads the files over HTTPS to sync.pdfkit-cdn.example. Kentik flags the unusual outbound flow and alerts the security team. It does not block the transfer, so the files still arrive.";
   var vc=cur.verdict==="allow"?"green":cur.verdict==="ask"?"amber":"red";
   var decs=[];
   if(!SHORT&&S.prot&&cur.verdict) decs.push('<div class="dec" style="color:var(--'+vc+')">ECP decision: '+(cur.verdict==="ask"?"HOLD FOR APPROVAL":cur.verdict.toUpperCase())+'</div>');
-  if(!SHORT&&cur.id==="s19"&&S.prot&&(S.dns||S.net)) decs.push('<div class="dec" style="color:var(--text2)">Later layers stay available: Infoblox can block the DNS lookup, and Kentik detects and alerts on a flow. This run was already stopped on the laptop.</div>');
+  if(!SHORT&&cur.id==="s19"&&S.prot&&(S.dns||S.net)) decs.push('<div class="dec" style="color:var(--text2)">ECP already stopped the tool call.'+(S.net?' Kentik still flags the outbound attempt and alerts the security team.':'')+'</div>');
   if(!SHORT&&cur.id==="s19"&&!S.prot&&S.dns) decs.push('<div class="dec" style="color:var(--green)">Infoblox: blocked at the DNS lookup</div>');
-  if(!SHORT&&cur.id==="s19"&&!S.prot&&S.dns&&S.net) decs.push('<div class="dec" style="color:var(--text2)">Kentik is on, but the DNS block means there is no completed upload flow to alert on.</div>');
-  if(!SHORT&&cur.id==="s19"&&!S.prot&&!S.dns&&S.net) decs.push('<div class="dec" style="color:var(--amber)">Kentik: alert on the unusual flow. The upload is not blocked.</div>');
+  if(!SHORT&&cur.id==="s19"&&S.net) decs.push('<div class="dec" style="color:var(--kentik)">Kentik: unusual outbound flow flagged. Security team alerted.'+(S.prot||S.dns?'':' Upload not blocked.')+'</div>');
   var finColor=S.prot||S.dns?green:S.net?amber:red;
   var ed=edLine(cur);
   var edPlain=ed.text?("In everyday terms"+(ed.who?" · "+ed.who:"")+": "+ed.text):"";
@@ -545,14 +584,24 @@ function replay(autoplay){S.once=false;go(0,0);S.playing=autoplay!==false;render
 function setProt(v,autoplay){S.prot=!!v;replay(autoplay);}
 function setDns(v,autoplay){S.dns=!!v;replay(autoplay);}
 function setNet(v,autoplay){S.net=!!v;replay(autoplay);}
+function burst(x,y,kind){
+  var spec=kind==="ib"?{fill:"#ffe14a",stroke:"#111",word:"BLOCKED!",sub:"Infoblox DNS",ink:"#9b0c12"}:
+    kind==="kt"?{fill:"#D3400F",stroke:"#3a1204",word:"ALERT!",sub:"Kentik flow flagged",ink:"#fff8f4"}:
+    {fill:"var(--green)",stroke:"#06382a",word:"STOPPED!",sub:"Endpoint control",ink:"currentColor"};
+  var poly="-8,-76 20,-34 72,-56 38,-10 84,8 34,28 56,76 10,36 -10,80 -26,32 -74,50 -32,8 -82,-10 -28,-26 -62,-68 -12,-38";
+  var dots="";
+  [[-18,-16],[16,6],[-6,20],[26,-18],[-28,6]].forEach(function(p){dots+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="3" fill="'+spec.ink+'" opacity=".3"/>';});
+  return '<g transform="translate('+x+' '+y+')"><g class="burst '+kind+'"><polygon points="'+poly+'" fill="'+spec.fill+'" stroke="'+spec.stroke+'" stroke-width="7" stroke-linejoin="round"/>'+dots+'<text y="-2" text-anchor="middle" fill="'+spec.ink+'" font-size="22" font-weight="800" transform="rotate(-8)">'+spec.word+'</text><text y="16" text-anchor="middle" fill="'+spec.ink+'" font-size="10" font-weight="700" transform="rotate(-8)">'+spec.sub+'</text></g></g>';
+}
 function outcomeSentence(){
   if(S.prot){
-    var later=[]; if(S.dns) later.push("Infoblox"); if(S.net) later.push("Kentik");
-    return "Outcome (simulated): ECP stopped the attack at the tool call on the laptop, so the files never left."+(later.length?" "+later.join(" and ")+" "+(later.length>1?"are later layers":"is a later layer")+" and "+(later.length>1?"were":"was")+" not needed for this run.":"");
+    var extra=S.net?" Kentik flagged the outbound attempt and alerted the security team.":"";
+    if(S.dns) extra+=" Infoblox could also have blocked the DNS lookup.";
+    return "Outcome (simulated): ECP stopped the attack at the tool call on the laptop, so the files never left."+extra;
   }
-  if(S.dns&&S.net) return "Outcome (simulated): Infoblox blocked the upload at the DNS lookup of the unknown domain, so the connection was not made. Kentik did not see a completed outbound flow to alert on.";
+  if(S.dns&&S.net) return "Outcome (simulated): Infoblox blocked the upload at the DNS lookup, so the files stayed on the laptop. Kentik flagged the attempted connection and alerted the security team.";
   if(S.dns) return "Outcome (simulated): Infoblox blocked the upload at the DNS lookup of the unknown domain. The files stayed on the laptop.";
-  if(S.net) return "Outcome (simulated): the upload still happened. Kentik detected the unusual outbound flow to an unfamiliar host and raised an alert. Kentik did not block the transfer.";
+  if(S.net) return "Outcome (simulated): the upload still happened. Kentik flagged the unusual outbound flow and alerted the security team. Kentik did not block the transfer.";
   return "Impact (simulated): the payroll spreadsheet and saved browser passwords reached sync.pdfkit-cdn.example, no alert fired, and the employee saw a normal summary and draft.";
 }
 document.getElementById("playBtn").addEventListener("click",play);
