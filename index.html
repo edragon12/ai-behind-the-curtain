@@ -71,7 +71,7 @@ button.btn:focus-visible,.seg button:focus-visible,.chk:focus-visible,.dot:focus
 .dot{width:14px;height:14px;border-radius:7px;border:1px solid var(--border2);cursor:pointer;background:transparent;padding:0}
 .dot.cur{width:26px}
 .hint{font-size:12px;color:var(--text3);margin-left:6px}
-.card{margin-top:12px;border-left:4px solid var(--blue);padding:12px 16px;background:var(--panel2);border-radius:10px}
+.card{margin:0 0 18px;min-height:256px;border-left:4px solid var(--blue);padding:12px 16px;background:var(--panel2);border-radius:10px}
 .card .meta{font-size:12px;letter-spacing:.05em;color:var(--text3)}
 .card .ttl{font-size:19px;font-weight:700;margin-top:3px}
 .card .body{font-size:15px;color:var(--text2);margin-top:6px}
@@ -99,7 +99,7 @@ body.present .card .ed{font-size:21px}
 body.present.short .card .ed{font-size:30px;line-height:1.35;padding:12px 16px}
 body.present.short .card .ttl{font-size:34px}
 body.present .card .dec,body.present .card .fin{font-size:20px}
-@media (max-width:820px){ .stage{overflow-x:auto} .stage svg{min-width:980px} }
+@media (max-width:820px){ .stage{overflow-x:auto} .stage svg{min-width:980px} .card{min-height:440px} }
 </style>
 </head>
 <body>
@@ -111,6 +111,7 @@ body.present .card .dec,body.present .card .fin{font-size:20px}
     </div>
     <div class="hide-present"><button class="btn theme" id="themeBtn" type="button" aria-label="Switch color theme">Theme: auto</button></div>
   </header>
+  <div class="card" id="card" aria-live="polite"></div>
   <h2 class="hide-present">Live flow</h2>
   <div class="controls" id="controls">
     <button class="btn primary" id="playBtn" type="button">Play</button>
@@ -135,7 +136,6 @@ body.present .card .dec,body.present .card .fin{font-size:20px}
     <p class="depth-out" id="depthOut"></p>
   </div>
   <div class="dots hide-present" id="dots"></div>
-  <div class="card" id="card" aria-live="polite"></div>
 
   <div class="hide-present" id="related">
     <h2>Related tools</h2>
