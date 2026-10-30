@@ -6,8 +6,6 @@ An everyday request to a desktop AI assistant, like “summarize the contract PD
 
 ![Animated preview of the protected run](docs/preview.gif)
 
-![Screenshot](docs/screenshot.png)
-
 ## New to AI? Start here
 
 You don't need a technical background. Every box in the diagram also has an **“In everyday terms”** line, and the page has a plain-English card for each part. In short:
@@ -27,14 +25,16 @@ You don't need a technical background. Every box in the diagram also has an **�
 
 **Why a firewall or router can't catch this attack on its own:** the trick happens *on the laptop*. Hidden text in a PDF steers the assistant, and a local plug-in reads files without any network traffic. By the time data leaves, it looks like ordinary encrypted web traffic. Only something on the endpoint, such as the ECP layer, can see which program touched which file, and for whom.
 
-**Related tools.** From the network side, not as the ECP layer itself: [Kentik](https://www.kentik.com/product/kentik-platform/) (network observability and traffic analytics, such as unusual flows to an unknown host) and [Infoblox](https://www.infoblox.com/products/threat-defense/) (DNS security and DNS-layer threat defense, such as lookups of unknown or risky domains). This demo is generic and educational, is not affiliated with or endorsed by Kentik or Infoblox, the ECP layer shown is a simplified illustration rather than any vendor's product, and names are trademarks of their respective owners.
+**Three layers, one attack.** Tick any combination. **Endpoint Control and Prevention (ECP)** stops the upload at the tool call on the laptop. **[Infoblox](https://www.infoblox.com/products/threat-defense/)** (DNS security) can block the DNS lookup of the unknown domain before the connection is made. **[Kentik](https://www.kentik.com/product/kentik-platform/)** (network observability) detects and alerts on the unusual outbound flow and does not block it. Kentik alone: the upload still happens, but it is flagged. Infoblox on: the upload is blocked at DNS. ECP on: it is stopped at the tool call.
+
+**Disclosure:** the author works at Kentik / Infoblox. This is a personal, educational demo, not an official Kentik or Infoblox resource, and not endorsed by either company. The ECP layer is a simplified, generic illustration. Product names are trademarks of their respective owners.
 
 ## What you can do on the page
 
 - **Play / Pause / Step / Reset** and change the speed (0.5×, 1×, 2×).
 - Click any step dot to jump to that step, and hover over any box for its plain-English and technical explanation.
-- Tick **Endpoint Control and Prevention (ECP)** to replay the same scenario with protection.
-- Compare the **outcome** side by side, and read the simulated **inventory**, the **key takeaways** and the full **glossary**.
+- Tick **Endpoint Control and Prevention (ECP)**, **Infoblox (DNS security)**, and **Kentik (network observability)** on their own or together. Each replays the scenario and shows a check at the step it covers.
+- Read the plain-English card for each part under the diagram.
 - The page follows your system's light or dark setting. Use the Theme button to override it.
 
 ## Run it locally
@@ -56,7 +56,9 @@ Optional URL parameters: `?protected=1` (start in protected mode), `?autoplay=1`
 
 ## Disclaimer
 
-This is an **educational simulation**. The company, PDF, plugin, host names, policies and outcomes in the scenario are **fictional** and simplified for teaching. The project is **not affiliated with, sponsored by or endorsed by any vendor**, and doesn't rate any real product. The ECP layer is a simplified illustration. Product categories such as “desktop AI assistant” and “MCP connector” are used generically. It is provided **as-is, with no warranty**; see [LICENSE](LICENSE).
+This is an **educational simulation**. The company, PDF, plugin, host names, policies and outcomes in the scenario are **fictional** and simplified for teaching. It doesn't rate any real product. Product categories such as “desktop AI assistant” and “MCP connector” are used generically.
+
+**Disclosure:** the author works at Kentik / Infoblox. This is a personal, educational demo, not an official Kentik or Infoblox resource, and not endorsed by either company. The ECP layer is a simplified, generic illustration. Product names are trademarks of their respective owners. It is provided **as-is, with no warranty**; see [LICENSE](LICENSE).
 
 ## Author
 
