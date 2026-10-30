@@ -25,7 +25,7 @@ You don't need a technical background. Hover any box in the diagram for an **“
 
 **Why a firewall or router can't catch this attack on its own:** the trick happens *on the laptop*. Hidden text in a PDF steers the assistant, and a local plug-in reads files without any network traffic. By the time data leaves, it looks like ordinary encrypted web traffic. Only something on the endpoint, such as the ECP layer, can see which program touched which file, and for whom.
 
-**Three layers, one attack.** In the **Defense in depth** bar under the diagram, tick any combination. **Endpoint Control and Prevention (ECP)** stops the upload at the tool call on the laptop. **[Infoblox](https://www.infoblox.com/products/threat-defense/)** (DNS security) can block the DNS lookup of the unknown domain before the connection is made. **[Kentik](https://www.kentik.com/product/kentik-platform/)** (network observability) detects and alerts on the unusual outbound flow and does not block it. Kentik alone: the upload still happens, but it is flagged. Infoblox on: the upload is blocked at DNS. ECP on: it is stopped at the tool call.
+**Three layers, one attack.** In the **Defense in depth** bar above Live flow, tick any combination. **Endpoint Control and Prevention (ECP)** stops the upload at the tool call on the laptop. **[Infoblox](https://www.infoblox.com/products/threat-defense/)** (DNS security) can block the DNS lookup of the unknown domain before the connection is made. **[Kentik](https://www.kentik.com/product/kentik-platform/)** (network observability) detects and alerts on the unusual outbound flow and does not block it. Kentik alone: the upload still happens, but it is flagged. Infoblox on: the upload is blocked at DNS. ECP on: it is stopped at the tool call.
 
 **Disclosure:** the author works at Kentik / Infoblox. This is a personal, educational demo, not an official Kentik or Infoblox resource, and not endorsed by either company. The ECP layer is a simplified, generic illustration. Product names are trademarks of their respective owners.
 
@@ -33,7 +33,7 @@ You don't need a technical background. Hover any box in the diagram for an **“
 
 - **Play / Pause / Step / Reset** and change the speed (0.5×, 1×, 2×).
 - Click any step dot to jump to that step, and hover over any box for its plain-English and technical explanation.
-- In the **Defense in depth** bar under the diagram, tick **ECP**, **Infoblox**, and **Kentik** on their own or together. Each replays the scenario and shows a check at the step it covers.
+- In the **Defense in depth** bar above Live flow, tick **ECP**, **Infoblox**, and **Kentik** on their own or together. Each replays the scenario and shows a check at the step it covers.
 - The page follows your system's light or dark setting. Use the Theme button to override it.
 
 ## Run it locally
