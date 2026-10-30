@@ -27,6 +27,8 @@ You don't need a technical background. Hover any box in the diagram for an **“
 
 **Three layers, one attack.** In the **Defense in depth** bar above Live flow, tick any combination. **Endpoint Control and Prevention (ECP)** stops the upload at the tool call on the laptop. **[Infoblox](https://www.infoblox.com/products/threat-defense/)** (DNS security) can block the DNS lookup of the unknown domain before the connection is made. **[Kentik](https://www.kentik.com/product/kentik-platform/)** (network observability) detects and alerts on the unusual outbound flow and does not block it. Kentik alone: the upload still happens, but it is flagged. Infoblox on: the upload is blocked at DNS. ECP on: it is stopped at the tool call.
 
+If none of those layers is on and the simulated files leave the laptop, the page cites industry averages from IBM’s [Cost of a Data Breach Report 2026](https://www.ibm.com/reports/data-breach) (Ponemon Institute, 602 breached organizations, March 2025 to February 2026): $5.89M for a breach involving an AI model prompt injection incident, a global average of $4.99M (a record, up 12%), and a US average of $11.5M. Those figures are not a cost calculated for this scenario, and the page does not claim a dollar saving for any product.
+
 **Disclosure:** the author works at Kentik / Infoblox. This is a personal, educational demo, not an official Kentik or Infoblox resource, and not endorsed by either company. The ECP layer is a simplified, generic illustration. Product names are trademarks of their respective owners.
 
 ## What you can do on the page
