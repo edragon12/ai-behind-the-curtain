@@ -158,10 +158,10 @@ body.present .card .dec,body.present .card .fin{font-size:20px}
   body:not(.present) .mode{flex-basis:auto;white-space:nowrap}
   body:not(.present) button.btn{padding:4px 10px}
 }
-@media (min-width:1100px){
+@media (min-width:900px){
   body:not(.present) .fit{
     display:grid;
-    grid-template-columns:minmax(0,1fr) 280px;
+    grid-template-columns:minmax(0,1fr) clamp(220px,24vw,300px);
     grid-template-rows:auto auto auto minmax(0,1fr);
     column-gap:8px;
   }
@@ -176,11 +176,21 @@ body.present .card .dec,body.present .card .fin{font-size:20px}
     border:1px solid var(--border);border-left-width:4px;
   }
   body:not(.present) .card .meta{font-size:12px}
-  body:not(.present) .card .ttl{font-size:18px;line-height:1.25;white-space:normal;overflow:visible;text-overflow:unset}
-  body:not(.present) .card .body{display:block;font-size:15px;line-height:1.4;margin-top:8px;-webkit-line-clamp:unset;overflow:visible}
-  body:not(.present) .card .ed{display:block;font-size:15px;line-height:1.4;margin-top:10px;padding:8px 10px;-webkit-line-clamp:unset;overflow:visible}
+  body:not(.present) .card .ttl{font-size:clamp(16px,1.5vw,18px);line-height:1.25;white-space:normal;overflow:visible;text-overflow:unset}
+  body:not(.present) .card .body{display:block;font-size:clamp(14px,1.2vw,15px);line-height:1.4;margin-top:8px;-webkit-line-clamp:unset;overflow:visible}
+  body:not(.present) .card .ed{display:block;font-size:clamp(14px,1.2vw,15px);line-height:1.4;margin-top:10px;padding:8px 10px;-webkit-line-clamp:unset;overflow:visible}
   body:not(.present) .card .extra{display:block;min-height:0;max-height:none;overflow:visible}
   body:not(.present) .card .dec,body:not(.present) .card .fin{display:block;margin-top:8px;font-size:14px;line-height:1.35;white-space:normal;overflow:visible;text-overflow:unset}
+}
+@media (min-width:900px) and (max-width:1099px){
+  body:not(.present) .card{padding:8px 10px}
+  body:not(.present) .card .body{margin-top:6px}
+  body:not(.present) .card .ed{margin-top:6px;padding:6px 8px}
+  body:not(.present) .card .dec,body:not(.present) .card .fin{margin-top:6px}
+}
+@media (min-width:900px) and (max-width:1199px){
+  body:not(.present) .depth-out,body:not(.present) .layer-note{white-space:normal;overflow:visible;text-overflow:unset}
+  body:not(.present) .depth-out{min-height:2.6em}
 }
 @media (max-width:820px){
   .stage{position:relative;overflow-x:auto}
@@ -223,7 +233,7 @@ body.present .card .dec,body.present .card .fin{font-size:20px}
     </div>
     <span class="mode" id="modeLbl">Mode: no extra controls (default)</span>
   </div>
-  <div class="stage"><svg id="svg" viewBox="0 0 1280 590" preserveAspectRatio="xMidYMid meet" role="img" aria-label="AI assistant request flow diagram"></svg><svg id="fx" viewBox="0 0 1280 590" preserveAspectRatio="xMidYMid meet" aria-hidden="true"></svg></div>
+  <div class="stage"><svg id="svg" viewBox="0 0 1280 590" preserveAspectRatio="xMidYMin meet" role="img" aria-label="AI assistant request flow diagram"></svg><svg id="fx" viewBox="0 0 1280 590" preserveAspectRatio="xMidYMin meet" aria-hidden="true"></svg></div>
 </div>
   <div class="dots hide-present" id="dots"></div>
 
