@@ -45,9 +45,10 @@ It's a single self-contained `index.html` with no dependencies, build step or ne
 ```bash
 git clone https://github.com/edragon12/ai-behind-the-curtain.git
 cd ai-behind-the-curtain
-# Either open index.html directly in a browser, or serve it:
-python3 -m http.server 8000   # then visit http://localhost:8000
+python3 -m http.server 8000
 ```
+
+Then open http://localhost:8000. Or just open index.html directly in a browser.
 
 Optional URL parameters: `?protected=1` (start in protected mode), `?autoplay=1`, `?speed=2`, `?theme=dark|light`, `?present=1` (compact presentation layout), `?captions=short` (step title plus the everyday line only).
 
