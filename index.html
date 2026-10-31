@@ -83,13 +83,21 @@ button.btn:focus-visible,.seg button:focus-visible,.chk:focus-visible,.depth-ite
   :root:not([data-theme="dark"]) .burst.ecp text{fill:#fff}
 }
 @keyframes comic-pop{
-  0%{transform:scale(.12) rotate(-18deg);opacity:0}
+  0%{transform:scale(.14) rotate(-18deg);opacity:0}
   42%{transform:scale(1.08) rotate(8deg);opacity:1}
   68%{transform:scale(.9) rotate(-4deg);opacity:1}
-  100%{transform:scale(.56) rotate(-7deg);opacity:1}
+  100%{transform:scale(.58) rotate(-7deg);opacity:1}
 }
+@keyframes comic-pop-ib{
+  0%{transform:scale(.12) rotate(-18deg);opacity:0}
+  42%{transform:scale(.72) rotate(8deg);opacity:1}
+  68%{transform:scale(.6) rotate(-4deg);opacity:1}
+  100%{transform:scale(.40) rotate(-7deg);opacity:1}
+}
+.burst.ib{animation-name:comic-pop-ib}
 @media (prefers-reduced-motion:reduce){
-  .burst{animation:none;transform:scale(.56) rotate(-7deg);opacity:1}
+  .burst{animation:none;transform:scale(.58) rotate(-7deg);opacity:1}
+  .burst.ib{transform:scale(.40) rotate(-7deg)}
 }
 .dots{margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 .dot{width:14px;height:14px;border-radius:7px;border:1px solid var(--border2);cursor:pointer;background:transparent;padding:0}
@@ -101,15 +109,16 @@ button.btn:focus-visible,.seg button:focus-visible,.chk:focus-visible,.depth-ite
 .card .body{font-size:13px;line-height:1.3;color:var(--text2);margin-top:2px;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
 .card .ed{margin-top:4px;font-size:13px;line-height:1.3;color:var(--text);background:var(--amberSoft);border-radius:8px;padding:2px 8px;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
 .card .edk{font-weight:800;color:var(--amber)}
-.card .dec{margin-top:3px;font-weight:700;font-size:12px;line-height:1.3;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:1;overflow:hidden}
-.card .fin{margin-top:3px;font-weight:700;font-size:12px;line-height:1.3;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+.card .extra{min-height:0}
+.card .dec{margin-top:3px;font-weight:700;font-size:12px;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card .fin{margin-top:3px;font-weight:700;font-size:12px;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--border);color:var(--text3);font-size:13px}
 .zone{fill:var(--panel2);stroke:var(--border)}
-.zlabel{fill:var(--text3);font:700 11px var(--font);letter-spacing:.08em}
-.edge{fill:none;stroke:var(--border2);stroke-width:1.2}
-.ntitle{fill:var(--text);font:700 12px var(--font)}
-.nsub{fill:var(--text2);font:400 10px var(--font)}
-.ntag{font:800 10px var(--font)}
+.zlabel{fill:var(--text3);font:700 14px var(--font);letter-spacing:.06em}
+.edge{fill:none;stroke:var(--border2);stroke-width:2}
+.ntitle{fill:var(--text);font:700 16px var(--font)}
+.nsub{fill:var(--text2);font:400 14px var(--font)}
+.ntag{font:800 13px var(--font)}
 /* presentation mode for video capture */
 body.present .wrap{max-width:none;padding:18px 34px}
 body.present .hide-present{display:none!important}
@@ -124,17 +133,30 @@ body.present.short .card .ed{font-size:30px;line-height:1.35;padding:12px 16px}
 body.present.short .card .ttl{font-size:34px}
 body.present .card .dec,body.present .card .fin{font-size:20px}
 @media (min-width:821px){
-  body:not(.present) .wrap{max-width:none;padding:0 12px 40px}
-  body:not(.present) .fit{height:100vh;box-sizing:border-box;padding:8px 0 6px;display:flex;flex-direction:column;min-height:0}
-  body:not(.present) .stage{position:relative;flex:1 1 auto;min-height:0;margin-top:4px}
-  body:not(.present) .stage svg{position:absolute;left:4px;top:4px;width:calc(100% - 8px);height:calc(100% - 8px);max-width:none;max-height:none}
-  body:not(.present) .card{min-height:150px}
-  body:not(.present) .depth{margin-top:4px;padding:6px 8px;flex:0 0 auto}
-  body:not(.present) .depth-row{margin-top:4px;gap:6px}
-  body:not(.present) .depth-item{padding:4px 6px;font-size:12px}
-  body:not(.present) .depth-out{margin-top:4px;font-size:12px}
-  body:not(.present) .cost{margin-top:2px;font-size:11px;line-height:1.3;padding:2px 8px}
-  body:not(.present) .layer-note{margin-top:2px;font-size:11px;line-height:1.35;min-height:1.35em}
+  body:not(.present) .wrap{max-width:none;padding:0 6px 28px}
+  body:not(.present) .fit{height:100vh;box-sizing:border-box;padding:4px 0 4px;display:flex;flex-direction:column;min-height:0}
+  body:not(.present) h1{font-size:18px}
+  body:not(.present) .by{font-size:11px}
+  body:not(.present) .stage{position:relative;flex:1 1 auto;min-height:0;margin-top:2px;padding:2px}
+  body:not(.present) .stage svg{position:absolute;left:2px;top:2px;width:calc(100% - 4px);height:calc(100% - 4px);max-width:none;max-height:none}
+  body:not(.present) .card{min-height:100px;height:100px;margin:2px 0;padding:3px 8px;overflow:hidden}
+  body:not(.present) .card .ttl{font-size:16px}
+  body:not(.present) .card .body{font-size:14px;line-height:1.25;margin-top:1px;-webkit-line-clamp:1}
+  body:not(.present) .card .ed{font-size:14px;line-height:1.25;margin-top:2px;padding:1px 6px;-webkit-line-clamp:1}
+  body:not(.present) .card .extra{display:flex;gap:10px;min-height:1.25em;max-height:1.25em;overflow:hidden;align-items:baseline}
+  body:not(.present) .card .dec,body:not(.present) .card .fin{margin-top:0;font-size:13px;line-height:1.25;flex:0 1 auto;min-width:0}
+  body:not(.present) .depth{margin-top:2px;padding:4px 8px;flex:0 0 auto}
+  body:not(.present) .depth-bar{display:flex;align-items:center;gap:8px}
+  body:not(.present) .depth-h{flex:0 0 auto;font-size:12px;white-space:nowrap}
+  body:not(.present) .depth-row{margin-top:0;gap:6px;flex:1 1 auto}
+  body:not(.present) .depth-item{padding:3px 6px;font-size:12px;align-items:center}
+  body:not(.present) .depth-out{margin-top:2px;font-size:12px;line-height:1.3;min-height:1.3em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  body:not(.present) .cost{margin-top:2px;font-size:12px;line-height:1.3;padding:2px 8px}
+  body:not(.present) .layer-note{margin-top:2px;font-size:12px;line-height:1.3;min-height:1.3em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  body:not(.present) h2.flow{font-size:13px;margin:0 8px 0 0;white-space:nowrap}
+  body:not(.present) .controls{margin-top:2px;flex-wrap:nowrap}
+  body:not(.present) .mode{flex-basis:auto;white-space:nowrap}
+  body:not(.present) button.btn{padding:4px 10px}
 }
 @media (max-width:820px){
   .stage{position:relative;overflow-x:auto}
@@ -155,18 +177,20 @@ body.present .card .dec,body.present .card .fin{font-size:20px}
   </header>
   <div class="card" id="card" aria-live="polite"></div>
   <div class="depth" id="depth">
+    <div class="depth-bar">
     <div class="depth-h">Defense in depth <span>· same attack, three layers</span></div>
     <div class="depth-row">
       <div class="depth-item" id="depthEcp" role="checkbox" aria-checked="false" tabindex="0" title="ECP stops the attack at the tool call on the laptop, before the plugin can send the files. It is a generic illustration, not a vendor product."><span class="tick" aria-hidden="true">✓</span><span><b>ECP</b> stops it at the tool call on the laptop</span></div>
       <div class="depth-item" id="depthDns" role="checkbox" aria-checked="false" tabindex="0" title="Infoblox DNS security can flag or block the lookup of an unknown, newly seen, or risky domain before the connection is made. That can stop the upload at resolution time if policy or threat intel blocks the domain."><span class="tick" aria-hidden="true">✓</span><span><b>Infoblox</b> can block the DNS lookup</span></div>
       <div class="depth-item" id="depthNet" role="checkbox" aria-checked="false" tabindex="0" title="Kentik can detect and alert on the unusual outbound flow to an unfamiliar host, and can optionally trigger a response through integrations. It does not block the upload on the laptop."><span class="tick" aria-hidden="true">✓</span><span><b>Kentik</b> detects and alerts on the unusual outbound flow</span></div>
     </div>
+    </div>
     <p class="depth-out" id="depthOut"></p>
     <p class="cost" id="costLine" title="IBM Cost of a Data Breach Report 2026, Ponemon Institute, 602 breached organizations, March 2025 to February 2026. Average cost of a breach involving an AI model prompt injection incident: USD 5.89M. Global average cost of a data breach: USD 4.99M (a record, up 12%). US average breach cost: USD 11.5M. These are industry averages, not a calculated cost for this simulated scenario.">Without protection, a breach like this costs an average of $5.89M (prompt injection) — $4.99M globally, $11.5M in the US. Source: <a href="https://www.ibm.com/reports/data-breach" rel="noopener">IBM Cost of a Data Breach Report 2026</a> (industry averages, not this simulation).</p>
     <p class="layer-note" id="layerNote"></p>
   </div>
-  <h2 class="flow hide-present">Live flow</h2>
   <div class="controls" id="controls">
+    <h2 class="flow hide-present">Live flow</h2>
     <button class="btn primary" id="playBtn" type="button">Play</button>
     <button class="btn" id="stepBtn" type="button">Step</button>
     <button class="btn" id="resetBtn" type="button">Reset</button>
@@ -395,6 +419,11 @@ function ekey(a,b){return a<b?a+"|"+b:b+"|"+a;}
 function dur(s){return s.parallel?1900:1300+650*s.edges.length;}
 function edLine(s){var useG=S.prot&&s.ged; var t=useG?s.ged:s.ed; var n=NODE[s.focus]; var who=""; if(!t&&n){t=EDAY[n.id]; who=(n.id==="guard"?"ECP":n.title);} return {who:who,text:t||""};}
 function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function fitted(x,y,cls,content,maxW,size){
+  var est=String(content).length*size*0.54;
+  var extra=est>maxW?' textLength="'+Math.round(maxW)+'" lengthAdjust="spacingAndGlyphs"':'';
+  return '<text class="'+cls+'" x="'+x+'" y="'+y+'" text-anchor="middle"'+extra+'>'+esc(content)+'</text>';
+}
 var DWELL=0.6;
 var STATIC=[];(function(){var seen={};STEPS.forEach(function(s){s.edges.forEach(function(e){if(e[0]==="guard")return;var k=ekey(e[0],e[1]);if(!seen[k]){seen[k]=1;STATIC.push(e);}});});})();
 
@@ -477,13 +506,15 @@ function render(){
   [[8,144,"USER"],[160,745,"WORK LAPTOP (ENDPOINT)"],[915,130,"NETWORK"],[1055,217,"CLOUD"]].forEach(function(z){
     h.push('<rect class="zone" x="'+z[0]+'" y="40" width="'+z[1]+'" height="540" rx="12"/><text class="zlabel" x="'+(z[0]+10)+'" y="30">'+z[2]+'</text>');
   });
-  h.push('<rect x="1074" y="182" width="176" height="198" rx="10" style="fill:none;stroke:var(--border2);stroke-dasharray:4 4"/><text class="zlabel" x="1082" y="195" style="font-size:10px">THE AI MODEL</text>');
-  STATIC.forEach(function(e){var k=ekey(e[0],e[1]),op=est[k];h.push('<path class="edge" d="'+pathD(geom(e[0],e[1]))+'"'+(op?' style="stroke:var(--red);stroke-opacity:'+op+';stroke-width:2"':'')+'/>');});
-  act.forEach(function(e){h.push('<path d="'+pathD(geom(e[0],e[1]))+'" style="fill:none;stroke:'+cc+';stroke-width:2.8;stroke-linecap:round'+(e[0]==="guard"?';stroke-dasharray:6 5':'')+'"/>');});
+  h.push('<rect x="1074" y="182" width="176" height="198" rx="10" style="fill:none;stroke:var(--border2);stroke-dasharray:4 4"/><text class="zlabel" x="1082" y="196" style="font-size:13px">THE AI MODEL</text>');
+  STATIC.forEach(function(e){var k=ekey(e[0],e[1]),op=est[k];h.push('<path class="edge" d="'+pathD(geom(e[0],e[1]))+'"'+(op?' style="stroke:var(--red);stroke-opacity:'+op+';stroke-width:2.6"':'')+'/>');});
+  act.forEach(function(e){h.push('<path d="'+pathD(geom(e[0],e[1]))+'" style="fill:none;stroke:'+cc+';stroke-width:3.4;stroke-linecap:round'+(e[0]==="guard"?';stroke-dasharray:6 5':'')+'"/>');});
   var G=NODE.guard, gAct=an.guard||(S.prot&&cur.guardOnly);
+  var gTitle=S.prot?"Endpoint Control and Prevention (ECP) on the laptop":"No AI-aware control on this laptop";
+  var gSub=S.prot?"visibility · posture · runtime: allow / hold for approval / block at the tool call":"turn on a layer above";
   h.push('<g><title>'+esc("Endpoint Control and Prevention (ECP)\nIn everyday terms: "+EDAY.guard+"\n"+COMP.guard)+'</title><rect x="'+(G.x-G.w/2)+'" y="'+(G.y-G.h/2)+'" width="'+G.w+'" height="'+G.h+'" rx="10" style="fill:'+(S.prot?css("greenSoft"):css("panel2"))+';stroke:'+(S.prot?green:css("border2"))+';stroke-width:'+(gAct?3:1.5)+(S.prot?'':';stroke-dasharray:6 5')+'"/>'+
-    '<text x="'+G.x+'" y="'+(G.y-3)+'" text-anchor="middle" style="font:800 13px var(--font);fill:'+(S.prot?green:css("text3"))+'">'+(S.prot?"Endpoint Control and Prevention (ECP) on the laptop":"No AI-aware control on this laptop")+'</text>'+
-    '<text x="'+G.x+'" y="'+(G.y+14)+'" text-anchor="middle" class="nsub" style="font-size:10.5px">'+(S.prot?"visibility · posture · runtime: allow / hold for approval / block at the tool call":"turn on a layer above")+'</text></g>');
+    fitted(G.x,G.y-4,"",gTitle,G.w-28,16).replace('class=""','style="font:800 16px var(--font);fill:'+(S.prot?green:css("text3"))+'"')+
+    fitted(G.x,G.y+14,"nsub",gSub,G.w-28,14)+'</g>');
   NODES.forEach(function(n){
     if(n.id==="guard") return;
     var a=!!an[n.id], tg=tag(n.id);
@@ -491,22 +522,22 @@ function render(){
     var fill=a?(cur.bad?css("redSoft"):cur.guardOnly?css("greenSoft"):css("blueSoft")):css("panel");
     var dash=(!a&&tg&&tg[1]===red)?';stroke-dasharray:5 3':'';
     h.push('<g><title>'+esc(n.title+" ("+n.tech+")\nIn everyday terms: "+EDAY[n.id]+"\n"+COMP[n.id])+'</title><rect x="'+(n.x-n.w/2)+'" y="'+(n.y-n.h/2)+'" width="'+n.w+'" height="'+n.h+'" rx="9" style="fill:'+fill+';stroke:'+sc+';stroke-width:'+(a?2.6:tg?1.6:1)+dash+'"/>'+
-      '<text class="ntitle" x="'+n.x+'" y="'+(n.y-3)+'" text-anchor="middle">'+esc(n.title)+'</text><text class="nsub" x="'+n.x+'" y="'+(n.y+12)+'" text-anchor="middle">'+esc(n.sub)+'</text>'+
-      (tg?'<text class="ntag" x="'+n.x+'" y="'+(n.y+n.h/2+13)+'" text-anchor="middle" style="fill:'+tg[1]+'">'+esc(tg[0])+'</text>':'')+'</g>');
+      fitted(n.x,n.y-5,"ntitle",n.title,n.w-14,16)+fitted(n.x,n.y+13,"nsub",n.sub,n.w-12,14)+
+      (tg?fitted(n.x,n.y+n.h/2+16,"ntag",tg[0],Math.min(n.w+8,136),13).replace('class="ntag"','class="ntag" style="fill:'+tg[1]+'"'):'')+'</g>');
   });
   if(S.prot&&cur.verdict&&cur.bpos&&tt>0.3) h.push('<path d="M'+cur.bpos[0]+',500 L'+cur.bpos[0]+','+(cur.bpos[1]+10)+'" style="fill:none;stroke:'+green+';stroke-width:2;stroke-dasharray:4 4"/>');
   packets.forEach(function(p){h.push('<circle cx="'+p[0]+'" cy="'+p[1]+'" r="12" style="fill:'+cc+';opacity:.25"/><circle cx="'+p[0]+'" cy="'+p[1]+'" r="6" style="fill:'+cc+'"/>');});
   if(blocked&&tt>=0.99&&packets.length){var p=packets[0];h.push('<circle cx="'+p[0]+'" cy="'+p[1]+'" r="13" style="fill:none;stroke:'+green+';stroke-width:2.5"/><path d="M'+(p[0]-6)+','+(p[1]-6)+' L'+(p[0]+6)+','+(p[1]+6)+' M'+(p[0]+6)+','+(p[1]-6)+' L'+(p[0]-6)+','+(p[1]+6)+'" style="stroke:'+green+';stroke-width:2.5"/>');}
   if(S.prot) st.forEach(function(s,i){
     if(!s.verdict||!s.bpos||!(i<idx||(i===idx&&tt>=0.4))) return;
-    var c=s.verdict==="allow"?green:s.verdict==="ask"?amber:red, w=s.badge.length*6.4+18;
-    h.push('<g style="opacity:'+(i===idx?1:0.8)+'"><rect x="'+(s.bpos[0]-w/2)+'" y="'+(s.bpos[1]-10)+'" width="'+w+'" height="20" rx="10" style="fill:var(--panel);stroke:'+c+';stroke-width:1.6"/><text x="'+s.bpos[0]+'" y="'+(s.bpos[1]+4)+'" text-anchor="middle" style="font:800 10.5px var(--font);fill:'+c+'">'+esc(s.badge)+'</text></g>');
+    var c=s.verdict==="allow"?green:s.verdict==="ask"?amber:red, w=s.badge.length*8+22;
+    h.push('<g style="opacity:'+(i===idx?1:0.8)+'"><rect x="'+(s.bpos[0]-w/2)+'" y="'+(s.bpos[1]-12)+'" width="'+w+'" height="24" rx="12" style="fill:var(--panel);stroke:'+c+';stroke-width:1.8"/><text x="'+s.bpos[0]+'" y="'+(s.bpos[1]+5)+'" text-anchor="middle" style="font:800 13px var(--font);fill:'+c+'">'+esc(s.badge)+'</text></g>');
   });
   function mark(x,y,name,tip,hgt){
-    hgt=hgt||18;
-    var label="✓ "+name, w=Math.ceil(label.length*6.5+16);
+    hgt=hgt||22;
+    var label="✓ "+name, w=Math.ceil(label.length*8.2+18);
     var x0=Math.max(6,Math.min(1274-w,x-w/2)), y0=y-hgt/2;
-    h.push('<g class="mark"><title>'+esc(tip)+'</title><rect x="'+x0+'" y="'+y0+'" width="'+w+'" height="'+hgt+'" rx="8" style="fill:var(--greenSoft);stroke:'+green+';stroke-width:1.6"/><text x="'+(x0+w/2)+'" y="'+(y0+hgt/2+4)+'" text-anchor="middle" style="font:800 11px var(--font);fill:'+green+'">'+esc(label)+'</text></g>');
+    h.push('<g class="mark"><title>'+esc(tip)+'</title><rect x="'+x0+'" y="'+y0+'" width="'+w+'" height="'+hgt+'" rx="8" style="fill:var(--greenSoft);stroke:'+green+';stroke-width:1.8"/><text x="'+(x0+w/2)+'" y="'+(y0+hgt/2+5)+'" text-anchor="middle" style="font:800 14px var(--font);fill:'+green+'">'+esc(label)+'</text></g>');
   }
   var onTool=cur.id==="s17"||cur.id==="s18"||cur.id==="s19";
   if(S.prot&&onTool) mark(860,256,"ECP","ECP stops this at the tool call on the laptop, before the plugin can send the files. Generic illustration, not a vendor product.");
@@ -519,8 +550,8 @@ function render(){
   if(kentikOn){
     var kTip=S.dns?"Kentik flagged the attempted connection and the suspicious plugin traffic, then alerted the security team. Infoblox blocked the DNS lookup, so the upload did not complete.":"Kentik flagged an unusual outbound flow toward the unknown host and alerted the security team. It does not block the upload on the laptop.";
     h.push('<path d="M980,335 C990,430 1040,500 1082,522" style="fill:none;stroke:var(--kentik);stroke-width:2.8;stroke-dasharray:7 4"/>');
-    h.push('<g><title>'+esc(kTip)+'</title><rect x="900" y="338" width="160" height="30" rx="6" style="fill:var(--kentik);stroke:#4a1506;stroke-width:1.2"/><text x="980" y="350" text-anchor="middle" style="font:800 9px var(--font);fill:#fff8f4">Kentik: unusual outbound</text><text x="980" y="362" text-anchor="middle" style="font:800 9px var(--font);fill:#fff8f4">flow flagged</text></g>');
-    h.push('<text x="1054" y="386" text-anchor="middle" style="font:800 11px var(--font);fill:var(--kentik)">Kentik alert</text>');
+    h.push('<g><title>'+esc(kTip)+'</title><rect x="888" y="340" width="184" height="36" rx="7" style="fill:var(--kentik);stroke:#4a1506;stroke-width:1.4"/><text x="980" y="354" text-anchor="middle" style="font:800 13px var(--font);fill:#fff8f4">Kentik: unusual outbound</text><text x="980" y="370" text-anchor="middle" style="font:800 13px var(--font);fill:#fff8f4">flow flagged</text></g>');
+    h.push('<text x="1054" y="392" text-anchor="middle" style="font:800 14px var(--font);fill:var(--kentik)">Kentik alert</text>');
     var Sm=NODE.siem;
     h.push('<rect x="'+(Sm.x-Sm.w/2-3)+'" y="'+(Sm.y-Sm.h/2-3)+'" width="'+(Sm.w+6)+'" height="'+(Sm.h+6)+'" rx="11" style="fill:rgba(211,64,15,.14);stroke:var(--kentik);stroke-width:3"/>');
   }
@@ -529,7 +560,7 @@ function render(){
   var sig=(showE?"E":"")+(showI?"I":"")+(showK?"K":"");
   if(render.fx!==sig){
     render.fx=sig;
-    document.getElementById("fx").innerHTML=(showE?burst(150,360,"ecp"):"")+(showK?burst(900,258,"kt"):"")+(showI?burst(1162,455,"ib"):"");
+    document.getElementById("fx").innerHTML=(showE?burst(100,368,"ecp"):"")+(showK?burst(818,108,"kt"):"")+(showI?burst(1162,477,"ib"):"");
   }
 
   // controls
@@ -548,12 +579,16 @@ function render(){
   depthItem("depthEcp",S.prot,cur.id==="s17"||cur.id==="s18"||cur.id==="s19");
   depthItem("depthDns",S.dns,cur.id==="s19");
   depthItem("depthNet",S.net,cur.id==="s19");
-  document.getElementById("depthOut").textContent=outcomeSentence();
+  var outcome=outcomeSentence();
+  var depthOut=document.getElementById("depthOut");
+  depthOut.textContent=outcome;
+  depthOut.title=outcome;
   var note=document.getElementById("layerNote");
   if(S.prot) note.textContent="ECP stopped the attack at the tool call, before the data left the laptop."+(S.net?" Kentik also flagged the attempt.":"")+(S.dns?" Infoblox could also block the DNS lookup.":"");
   else if(S.dns) note.textContent="Infoblox blocked the DNS lookup before the data left."+(S.net?" Kentik flagged the attempt and alerted the security team.":"");
   else if(S.net) note.textContent="Kentik flagged the unusual outbound flow and alerted the security team. The upload was not blocked.";
   else note.textContent="";
+  note.title=note.textContent;
   Array.prototype.forEach.call(document.querySelectorAll("#speedSeg button"),function(b){b.classList.toggle("on",parseFloat(b.getAttribute("data-s"))===S.speed);});
   // dots
   var d=[]; st.forEach(function(s,i){
@@ -582,8 +617,7 @@ function render(){
   c.title=[cur.title, txt, edPlain, finText].filter(Boolean).join("\n");
   c.innerHTML='<div class="meta">STEP '+(idx+1)+' OF '+st.length+' · '+esc(cur.phase.toUpperCase())+(cur.bad?' · SIMULATED ATTACK':'')+'</div><div class="ttl" title="'+esc(cur.title)+'">'+esc(cur.title)+'</div>'+(SHORT?'':'<div class="body" title="'+esc(txt)+'">'+esc(txt)+'</div>')+
     (ed.text?'<div class="ed" title="'+esc(edPlain)+'"><span class="edk">In everyday terms'+(ed.who?' · '+esc(ed.who):'')+':</span> '+esc(ed.text)+'</div>':'')+
-    decs.join("")+
-    (finished?'<div class="fin" style="color:var(--'+finColor+')" title="'+esc(finText)+'">'+esc(finText)+'</div>':'');
+    '<div class="extra" title="'+esc([decs.map(function(d){return d.replace(/<[^>]+>/g," ");}).join(" "), finText].filter(Boolean).join(" "))+'">'+decs.join("")+(finished?'<div class="fin" style="color:var(--'+finColor+')">'+esc(finText)+'</div>':'')+'</div>';
 }
 
 function go(i,t){S.idx=i;S.t=t;}
@@ -598,10 +632,10 @@ function burst(x,y,kind){
   var spec=kind==="ib"?{fill:"#ffe14a",stroke:"#111",word:"BLOCKED!",sub:"Infoblox DNS",ink:"#9b0c12"}:
     kind==="kt"?{fill:"#D3400F",stroke:"#3a1204",word:"ALERT!",sub:"Kentik flow flagged",ink:"#fff8f4"}:
     {fill:"var(--green)",stroke:"#06382a",word:"STOPPED!",sub:"Endpoint control",ink:"currentColor"};
-  var poly="-8,-76 20,-34 72,-56 38,-10 84,8 34,28 56,76 10,36 -10,80 -26,32 -74,50 -32,8 -82,-10 -28,-26 -62,-68 -12,-38";
+  var poly="-10,-92 24,-41 86,-67 46,-12 101,10 41,34 67,91 12,43 -12,96 -31,38 -89,60 -38,10 -98,-12 -34,-31 -74,-82 -14,-46";
   var dots="";
-  [[-18,-16],[16,6],[-6,20],[26,-18],[-28,6]].forEach(function(p){dots+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="3" fill="'+spec.ink+'" opacity=".3"/>';});
-  return '<g transform="translate('+x+' '+y+')"><g class="burst '+kind+'"><polygon points="'+poly+'" fill="'+spec.fill+'" stroke="'+spec.stroke+'" stroke-width="7" stroke-linejoin="round"/>'+dots+'<text y="-2" text-anchor="middle" fill="'+spec.ink+'" font-size="22" font-weight="800" transform="rotate(-8)">'+spec.word+'</text><text y="16" text-anchor="middle" fill="'+spec.ink+'" font-size="10" font-weight="700" transform="rotate(-8)">'+spec.sub+'</text></g></g>';
+  [[-22,-19],[19,7],[-7,24],[31,-22],[-34,7]].forEach(function(p){dots+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="3.5" fill="'+spec.ink+'" opacity=".3"/>';});
+  return '<g transform="translate('+x+' '+y+')"><g class="burst '+kind+'"><polygon points="'+poly+'" fill="'+spec.fill+'" stroke="'+spec.stroke+'" stroke-width="8" stroke-linejoin="round"/>'+dots+'<text y="-6" text-anchor="middle" fill="'+spec.ink+'" font-size="32" font-weight="800" transform="rotate(-8)">'+spec.word+'</text><text y="20" text-anchor="middle" fill="'+spec.ink+'" font-size="18" font-weight="700" transform="rotate(-8)">'+spec.sub+'</text></g></g>';
 }
 function outcomeSentence(){
   if(S.prot){
