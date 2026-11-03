@@ -25,7 +25,7 @@ You don't need a technical background. Hover any box in the diagram for an **“
 
 **Why a firewall or router can't catch this attack on its own:** the trick happens *on the laptop*. Hidden text in a PDF steers the assistant, and a local plug-in reads files without any network traffic. By the time data leaves, it looks like ordinary encrypted web traffic. Only something on the endpoint, such as the ECP layer, can see which program touched which file, and for whom.
 
-**Three layers, one attack.** In the **Defense in depth** bar above Live flow, tick any combination. **Endpoint Control and Prevention (ECP)** stops the upload at the tool call on the laptop. **[Infoblox](https://www.infoblox.com/products/threat-defense/)** (DNS security) can block the DNS lookup of the unknown domain before the connection is made. **[Kentik](https://www.kentik.com/product/kentik-platform/)** (network observability) detects and alerts on the unusual outbound flow and does not block it. Kentik alone: the upload still happens, but it is flagged. Infoblox on: the upload is blocked at DNS. ECP on: it is stopped at the tool call.
+**Kentik and Infoblox, one attack.** In the **Defense in depth** bar above Live flow, tick **[Kentik](https://www.kentik.com/product/kentik-platform/)** (detect and alert, it does not block), **[Infoblox](https://www.infoblox.com/products/threat-defense/)** (can block the DNS lookup), or **Better together** (both: visibility plus enforcement). The diagram still shows a generic **Endpoint Control and Prevention (ECP)** illustration on the laptop. That layer is not a checkbox in the bar.
 
 The page always shows what a breach like this costs without protection, using industry averages from IBM’s [Cost of a Data Breach Report 2026](https://www.ibm.com/reports/data-breach) (Ponemon Institute, 602 breached organizations, March 2025 to February 2026): $5.89M for a breach involving an AI model prompt injection incident, a global average of $4.99M (a record, up 12%), and a US average of $11.5M. Those figures are not a cost calculated for this scenario. At the end of a run the step panel states the outcome once. When a layer was on, that panel also says what this simulation does with no protection: the payroll file and saved passwords reach the unknown host, no alert fires, and the employee sees a normal summary, plus the kind of office disruption that often follows. No dollar saving is claimed for any product, and no cost is invented beyond the IBM averages above.
 
@@ -35,7 +35,7 @@ The page always shows what a breach like this costs without protection, using in
 
 - **Play / Pause / Step / Reset** and change the speed (0.5×, 1×, 2×).
 - Click any step dot to jump to that step, and hover over any box for its plain-English and technical explanation.
-- In the **Defense in depth** bar above Live flow, tick **ECP**, **Infoblox**, and **Kentik** on their own or together. Each replays the scenario and shows a check at the step it covers.
+- In the **Defense in depth** bar above Live flow, tick **Kentik**, **Infoblox**, or **Better together**. Each replays the scenario. Unchecking Kentik or Infoblox clears Better together.
 - The page follows your system's light or dark setting. Use the Theme button to override it.
 
 ## Run it locally

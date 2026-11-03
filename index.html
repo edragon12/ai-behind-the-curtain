@@ -56,6 +56,8 @@ button.btn:focus-visible,.seg button:focus-visible,.chk:focus-visible,.depth-ite
 .chk.on .box{background:var(--green);border-color:var(--green);color:#fff}
 #depthNet.on{border-color:var(--kentik);background:var(--kentikSoft)}
 #depthNet.on .tick{background:var(--kentik);border-color:var(--kentik);color:#fff8f4}
+#depthBoth.on{border-color:var(--kentik);background:linear-gradient(90deg,var(--kentikSoft),var(--greenSoft))}
+#depthBoth.on .tick{background:var(--green);border-color:var(--kentik);color:#fff}
 .mode{font-size:12px;line-height:1.2;color:var(--text2);flex-basis:100%}
 .theme{font:600 13px var(--font)}
 .depth{margin-top:12px;border:1px solid var(--border);border-radius:14px;background:var(--panel);padding:10px 12px}
@@ -211,11 +213,11 @@ body.present .card .dec,body.present .card .fin{font-size:20px}
   <div class="card" id="card" aria-live="polite"></div>
   <div class="depth" id="depth">
     <div class="depth-bar">
-    <div class="depth-h">Defense in depth <span>· same attack, three layers</span></div>
+    <div class="depth-h">Defense in depth <span>· Kentik detects, Infoblox can block</span></div>
     <div class="depth-row">
-      <div class="depth-item" id="depthEcp" role="checkbox" aria-checked="false" tabindex="0" title="ECP stops the attack at the tool call on the laptop, before the plugin can send the files. It is a generic illustration, not a vendor product."><span class="tick" aria-hidden="true">✓</span><span><b>ECP</b> stops it at the tool call on the laptop</span></div>
+      <div class="depth-item" id="depthNet" role="checkbox" aria-checked="false" tabindex="0" title="Kentik detects and alerts. It does not block. On this path it can see the unusual flow, firewall syslog, SNMP traps and interface metrics, synthetic tests of normal sites, and whether a device config or a BGP route changed. Cloud flow logs apply when traffic leaves a cloud workload; this upload leaves the laptop."><span class="tick" aria-hidden="true">✓</span><span><b>Kentik</b> detects and alerts</span></div>
       <div class="depth-item" id="depthDns" role="checkbox" aria-checked="false" tabindex="0" title="Infoblox DNS security can flag or block the lookup of an unknown, newly seen, or risky domain before the connection is made. That can stop the upload at resolution time if policy or threat intel blocks the domain."><span class="tick" aria-hidden="true">✓</span><span><b>Infoblox</b> can block the DNS lookup</span></div>
-      <div class="depth-item" id="depthNet" role="checkbox" aria-checked="false" tabindex="0" title="Kentik can detect and alert on the unusual outbound flow to an unfamiliar host, and can optionally trigger a response through integrations. It does not block the upload on the laptop."><span class="tick" aria-hidden="true">✓</span><span><b>Kentik</b> detects and alerts on the unusual outbound flow</span></div>
+      <div class="depth-item" id="depthBoth" role="checkbox" aria-checked="false" tabindex="0" title="Better together: Kentik detects and alerts while Infoblox can block at DNS. Together you get visibility plus enforcement. Kentik still does not block."><span class="tick" aria-hidden="true">✓</span><span><b>Better together</b> visibility plus enforcement</span></div>
     </div>
     </div>
     <p class="cost" id="costLine" title="IBM Cost of a Data Breach Report 2026, Ponemon Institute, 602 breached organizations, March 2025 to February 2026. Average cost of a breach involving an AI model prompt injection incident: USD 5.89M. Global average cost of a data breach: USD 4.99M (a record, up 12%). US average breach cost: USD 11.5M. These are industry averages, not a calculated cost for this simulated scenario.">Without protection, a breach like this costs an average of $5.89M (prompt injection) — $4.99M globally, $11.5M in the US. Source: <a href="https://www.ibm.com/reports/data-breach" rel="noopener">IBM Cost of a Data Breach Report 2026</a> (industry averages, not this simulation).</p>
@@ -236,7 +238,7 @@ body.present .card .dec,body.present .card .fin{font-size:20px}
 
   <div class="hide-present" id="related">
     <h2>Related tools</h2>
-    <p style="color:var(--text2);margin-top:-6px">The same upload can be met at three different points. <b>ECP</b> is a generic control on the laptop and stops it at the tool call. <a href="https://www.infoblox.com/products/threat-defense/" rel="noopener">Infoblox</a> (DNS security) can block the DNS lookup of the unknown domain before the connection is made. <a href="https://www.kentik.com/product/kentik-platform/" rel="noopener">Kentik</a> (network observability) detects and alerts on the unusual outbound flow. It does not block the upload on the laptop. The network tools do not replace ECP.</p>
+    <p style="color:var(--text2);margin-top:-6px">The same upload can be met in more than one place. <b>ECP</b> in the diagram is a generic control on the laptop. In the bar, <a href="https://www.infoblox.com/products/threat-defense/" rel="noopener">Infoblox</a> (DNS security) can block the DNS lookup, and <a href="https://www.kentik.com/product/kentik-platform/" rel="noopener">Kentik</a> detects and alerts. Kentik does not block. Better together is both: visibility plus enforcement.</p>
     <footer>
       Disclosure: the author works at Kentik / Infoblox. This is a personal, educational demo, not an official Kentik or Infoblox resource, and not endorsed by either company. The ECP layer is a simplified, generic illustration. Product names are trademarks of their respective owners.<br>
       Built by <a href="https://www.linkedin.com/in/martin-tully-37704170" rel="noopener">Martin Tully</a> · MIT License
@@ -542,7 +544,7 @@ function render(){
   act.forEach(function(e){h.push('<path d="'+pathD(geom(e[0],e[1]))+'" style="fill:none;stroke:'+cc+';stroke-width:3.4;stroke-linecap:round'+(e[0]==="guard"?';stroke-dasharray:6 5':'')+'"/>');});
   var G=NODE.guard, gAct=an.guard||(S.prot&&cur.guardOnly);
   var gTitle=S.prot?"Endpoint Control and Prevention (ECP) on the laptop":"No AI-aware control on this laptop";
-  var gSub=S.prot?"visibility · posture · runtime: allow / hold for approval / block at the tool call":"turn on a layer above";
+  var gSub=S.prot?"visibility · posture · runtime: allow / hold for approval / block at the tool call":"generic illustration on the laptop";
   h.push('<g><title>'+esc("Endpoint Control and Prevention (ECP)\nIn everyday terms: "+EDAY.guard+"\n"+COMP.guard)+'</title><rect x="'+(G.x-G.w/2)+'" y="'+(G.y-G.h/2)+'" width="'+G.w+'" height="'+G.h+'" rx="10" style="fill:'+(S.prot?css("greenSoft"):css("panel2"))+';stroke:'+(S.prot?green:css("border2"))+';stroke-width:'+(gAct?3:1.5)+(S.prot?'':';stroke-dasharray:6 5')+'"/>'+
     fitted(G.x,G.y-5,"",gTitle,G.w-40,16).replace('class=""','style="font:800 16px var(--font);fill:'+(S.prot?green:css("text3"))+'"')+
     fitted(G.x,G.y+13,"nsub",gSub,G.w-40,13)+'</g>');
@@ -579,7 +581,7 @@ function render(){
   }
   var kentikOn=S.net&&(cur.id==="s19"||has("s19"));
   if(kentikOn){
-    var kTip=S.dns?"Kentik flagged the attempted connection and the suspicious plugin traffic, then alerted the security team. Infoblox blocked the DNS lookup, so the upload did not complete.":"Kentik flagged an unusual outbound flow toward the unknown host and alerted the security team. It does not block the upload on the laptop.";
+    var kTip=kentikExfilTip();
     h.push('<path d="M980,335 C990,430 1040,500 1082,522" style="fill:none;stroke:var(--kentik);stroke-width:2.8;stroke-dasharray:7 4"/>');
     h.push('<g><title>'+esc(kTip)+'</title><rect x="876" y="338" width="208" height="40" rx="7" style="fill:var(--kentik);stroke:#4a1506;stroke-width:1.4"/><text x="980" y="354" text-anchor="middle" style="font:800 15px var(--font);fill:#fff8f4">Kentik: unusual outbound</text><text x="980" y="372" text-anchor="middle" style="font:800 15px var(--font);fill:#fff8f4">flow flagged</text></g>');
     h.push('<text x="1054" y="396" text-anchor="middle" style="font:800 16px var(--font);fill:var(--kentik)">Kentik alert</text>');
@@ -601,15 +603,15 @@ function render(){
     el.classList.toggle("on",on);
     el.setAttribute("aria-checked",on?"true":"false");
   }
-  syncLayer("depthEcp",S.prot);
   syncLayer("depthDns",S.dns);
   syncLayer("depthNet",S.net);
-  var bits=[]; if(S.prot) bits.push("ECP"); if(S.dns) bits.push("Infoblox"); if(S.net) bits.push("Kentik");
+  syncLayer("depthBoth",S.dns&&S.net);
+  var bits=[]; if(S.dns&&S.net) bits.push("Better together"); else { if(S.net) bits.push("Kentik"); if(S.dns) bits.push("Infoblox"); }
   document.getElementById("modeLbl").textContent=bits.length?("Mode: "+bits.join(" + ")):"Mode: no extra controls (default)";
   function depthItem(id,on,now){var el=document.getElementById(id); el.classList.toggle("on",on); el.classList.toggle("now",!!(on&&now));}
-  depthItem("depthEcp",S.prot,cur.id==="s17"||cur.id==="s18"||cur.id==="s19");
   depthItem("depthDns",S.dns,cur.id==="s19");
-  depthItem("depthNet",S.net,cur.id==="s19");
+  depthItem("depthNet",S.net,cur.id==="s7"||cur.id==="s19");
+  depthItem("depthBoth",S.dns&&S.net,cur.id==="s19");
   Array.prototype.forEach.call(document.querySelectorAll("#speedSeg button"),function(b){b.classList.toggle("on",parseFloat(b.getAttribute("data-s"))===S.speed);});
   // dots
   var d=[]; st.forEach(function(s,i){
@@ -621,15 +623,17 @@ function render(){
   // card
   var txt=cur.text;
   if(S.prot&&cur.gtext) txt=cur.gtext;
-  else if(cur.id==="s19"&&S.dns&&S.net) txt="The plugin tries to reach sync.pdfkit-cdn.example. Infoblox blocks that DNS lookup, so the files stay on the laptop. Kentik still flags the attempted connection and the suspicious plugin traffic, and sends an alert to the security team.";
+  else if(cur.id==="s19"&&S.dns&&S.net) txt="The plugin tries to reach sync.pdfkit-cdn.example. Infoblox blocks that DNS lookup, so the files stay on the laptop. "+kentikExfilSentence(true);
   else if(cur.id==="s19"&&S.dns) txt="The plugin tries to upload the files to sync.pdfkit-cdn.example. Infoblox DNS security blocks the lookup of that unknown domain before the connection is made, so the upload does not start.";
-  else if(cur.id==="s19"&&S.net) txt="The plugin uploads the files over HTTPS to sync.pdfkit-cdn.example. Kentik flags the unusual outbound flow and alerts the security team. It does not block the transfer, so the files still arrive.";
+  else if(cur.id==="s19"&&S.net) txt="The plugin uploads the files over HTTPS to sync.pdfkit-cdn.example. "+kentikExfilSentence(false);
+  else if(cur.id==="s7"&&S.net) txt=cur.text+kentikBaselineSentence();
   var vc=cur.verdict==="allow"?"green":cur.verdict==="ask"?"amber":"red";
   var decs=[];
   if(!SHORT&&S.prot&&cur.verdict) decs.push('<div class="dec" style="color:var(--'+vc+')">ECP decision: '+(cur.verdict==="ask"?"HOLD FOR APPROVAL":cur.verdict.toUpperCase())+'</div>');
   if(!SHORT&&cur.id==="s19"&&S.prot&&(S.dns||S.net)) decs.push('<div class="dec" style="color:var(--text2)">ECP already stopped the tool call.'+(S.net?' Kentik still flags the outbound attempt and alerts the security team.':'')+'</div>');
   if(!SHORT&&cur.id==="s19"&&!S.prot&&S.dns) decs.push('<div class="dec" style="color:var(--green)">Infoblox: blocked at the DNS lookup</div>');
-  if(!SHORT&&cur.id==="s19"&&S.net) decs.push('<div class="dec" style="color:var(--kentik)">Kentik: unusual outbound flow flagged. Security team alerted.'+(S.prot||S.dns?'':' Upload not blocked.')+'</div>');
+  if(!SHORT&&cur.id==="s19"&&S.net) decs.push('<div class="dec" style="color:var(--kentik)">Kentik: detected and alerted (flow, syslog, SNMP). Did not block.'+(S.dns?' Infoblox still blocked DNS.':'')+'</div>');
+  if(!SHORT&&cur.id==="s7"&&S.net) decs.push('<div class="dec" style="color:var(--kentik)">Kentik baseline: SNMP metrics normal, configs unchanged, BGP quiet.</div>');
   var finColor=S.prot||S.dns?green:S.net?amber:red;
   var ed=edLine(cur);
   var edPlain=ed.text?("In everyday terms"+(ed.who?" · "+ed.who:"")+": "+ed.text):"";
@@ -672,15 +676,27 @@ function withoutProtectionSection(finished){
   }
   return '<section class="bare"><div class="bare-h">Without protection</div><p>In this simulation, with none of these layers on, payroll.xlsx and the saved browser passwords are uploaded to sync.pdfkit-cdn.example. No alert fires, and the employee sees a normal summary and draft. What often follows is illustrative, not a calculated cost. '+ibm+"</p>"+disruptionList()+"</section>";
 }
+function kentikBaselineSentence(){
+  return " Kentik is already watching this path, and it only detects and alerts. SNMP device and interface metrics look normal. Syslog and SNMP traps are quiet. Saved device configs are unchanged. BGP routes are unchanged, so this is not a hijack or a leak.";
+}
+function kentikExfilSentence(dnsBlocked){
+  var head=dnsBlocked?"Kentik still detects the attempt and alerts. It does not block.":"Kentik detects and alerts. It does not block the transfer.";
+  return head+" Signals: an unusual outbound flow; a firewall syslog of the new HTTPS session; an SNMP trap from that firewall; extra bytes on the egress interface; synthetic tests of normal sites still healthy, so this new destination stands out. Device configs were not edited. BGP routes did not change. Cloud flow logs are not this path: the files left the laptop through the office router, not a cloud workload.";
+}
+function kentikExfilTip(){
+  if(S.prot) return "ECP already stopped the tool call on the laptop, so the files never left. Kentik still detects and alerts on the outbound attempt. It does not block.";
+  var block=S.dns?" Infoblox blocked the DNS lookup, so the upload did not complete. Kentik still alerted on the attempt.":"";
+  return "Kentik detects and alerts. It does not block."+block+" On this upload: unusual outbound flow, firewall syslog, SNMP trap, egress interface metrics, and synthetic tests that stay healthy for normal sites. No device-config change. BGP routes unchanged (not a hijack). Cloud flow logs would matter if the traffic left a cloud workload; this one left the laptop.";
+}
 function outcomeSentence(){
   if(S.prot){
     var extra=S.net?" Kentik flagged the outbound attempt and alerted the security team.":"";
     if(S.dns) extra+=" Infoblox could also have blocked the DNS lookup.";
     return "Outcome (simulated): ECP stopped the attack at the tool call on the laptop, so the files never left."+extra;
   }
-  if(S.dns&&S.net) return "Outcome (simulated): Infoblox blocked the upload at the DNS lookup, so the files stayed on the laptop. Kentik flagged the attempted connection and alerted the security team.";
+  if(S.dns&&S.net) return "Outcome (simulated): Infoblox blocked the upload at the DNS lookup, so the files stayed on the laptop. Kentik detected the attempt and alerted the security team. Kentik did not block it. Together that is visibility plus enforcement.";
   if(S.dns) return "Outcome (simulated): Infoblox blocked the upload at the DNS lookup of the unknown domain. The files stayed on the laptop.";
-  if(S.net) return "Outcome (simulated): the upload still happened. Kentik flagged the unusual outbound flow and alerted the security team. Kentik did not block the transfer.";
+  if(S.net) return "Outcome (simulated): the upload still happened. Kentik detected the unusual flow, the firewall syslog, and the egress metrics, and alerted the security team. Kentik did not block the transfer. BGP and device configs were unchanged.";
   return "Impact (simulated): the payroll spreadsheet and saved browser passwords reached sync.pdfkit-cdn.example, no alert fired, and the employee saw a normal summary and draft.";
 }
 document.getElementById("playBtn").addEventListener("click",play);
@@ -692,9 +708,9 @@ function bindChk(id,get,set){
   el.addEventListener("click",function(){set(!get());});
   el.addEventListener("keydown",function(e){if(e.key===" "||e.key==="Enter"){e.preventDefault();set(!get());}});
 }
-bindChk("depthEcp",function(){return S.prot;},setProt);
 bindChk("depthDns",function(){return S.dns;},setDns);
 bindChk("depthNet",function(){return S.net;},setNet);
+bindChk("depthBoth",function(){return S.dns&&S.net;},function(v){S.dns=!!v;S.net=!!v;replay();});
 document.getElementById("dots").addEventListener("click",function(e){var b=e.target.closest(".dot");if(!b)return;S.playing=false;go(parseInt(b.getAttribute("data-i"),10),0);S.once=true;render();});
 
 // theme toggle
