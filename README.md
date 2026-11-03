@@ -4,6 +4,8 @@ An everyday request to a desktop AI assistant, like “summarize the contract PD
 
 **Live demo:** https://edragon12.github.io/ai-behind-the-curtain/
 
+**Alternate view:** [Laptop vs. the AI model](https://edragon12.github.io/ai-behind-the-curtain/laptop-vs-model.html) — laptop vs. AI model zones, plus a Poisoned AGENTS.md scenario (`?scenario=pdf|md`).
+
 ![Animated preview of the protected run](docs/preview.gif)
 
 ## New to AI? Start here
