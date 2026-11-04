@@ -1,6 +1,6 @@
 # What Happens Behind the AI Curtain
 
-An everyday request to a desktop AI assistant, like “summarize the contract PDF a vendor emailed me and draft a reply,” can be steered by hidden text in a PDF and a third-party plugin, and can send payroll data and saved passwords to an unknown host. **Better together:** Kentik sees the unusual outbound flow in NetFlow and the firewall or proxy syslog, and alerts. Infoblox can stop the name lookup at DNS. That is visibility plus enforcement. Kentik does not block. The page still walks every hop in plain English, and the diagram includes a generic Endpoint Control and Prevention (ECP) illustration on the laptop.
+An everyday request to a desktop AI assistant, like “summarize the contract PDF a vendor emailed me and draft a reply,” can be steered by hidden text in a PDF and a third-party plugin, and can send payroll data and saved passwords to an unknown host. **Better together:** Kentik sees the unusual outbound flow in NetFlow and the firewall or proxy syslog, and alerts. Infoblox can stop the name lookup at DNS. That is visibility plus enforcement. Kentik does not block. The page still walks every hop in plain English.
 
 **Live demo:** https://edragon12.github.io/ai-behind-the-curtain/
 
@@ -21,15 +21,14 @@ You don't need a technical background. Hover any box in the diagram for an **“
 - **The AI gateway.** The company's front gate for AI traffic. It sees what goes out, not what happens on your laptop.
 - **The AI provider and model router.** The reception desk that checks your account, and a dispatcher that sends the job to a quick, cheap model or a bigger reasoning model.
 - **Tokenizer, transformer and word-by-word writer.** The model chops your words into puzzle pieces, looks at all of them at once, then writes the answer one piece at a time, like super-charged autocomplete.
-- **Endpoint Control and Prevention (ECP).** A security guard on the laptop who checks each action before it happens: allow, ask a person first, or block.
 
-**Why a firewall or router can't catch this attack on its own:** the trick happens *on the laptop*. Hidden text in a PDF steers the assistant, and a local plug-in reads files without any network traffic. By the time data leaves, it looks like ordinary encrypted web traffic. Only something on the endpoint, such as the ECP layer, can see which program touched which file, and for whom.
+**Why a firewall or router can't catch this attack on its own:** the trick happens *on the laptop*. Hidden text in a PDF steers the assistant, and a local plug-in reads files without any network traffic. By the time data leaves, it looks like ordinary encrypted web traffic.
 
-**Better together.** In the **Defense in depth** bar above Live flow, **[Kentik](https://www.kentik.com/product/kentik-platform/)** sees the unusual outbound flow in NetFlow and the firewall or proxy syslog, and alerts. It does not block. **[Infoblox](https://www.infoblox.com/products/threat-defense/)** can stop the DNS lookup. **Better together** turns both on: visibility plus enforcement. Unchecking either one clears Better together. The diagram still shows a generic **Endpoint Control and Prevention (ECP)** illustration on the laptop. That layer is not a checkbox in the bar.
+**Better together.** In the **Defense in depth** bar above Live flow, **[Kentik](https://www.kentik.com/product/kentik-platform/)** sees the unusual outbound flow in NetFlow and the firewall or proxy syslog, and alerts. It does not block. **[Infoblox](https://www.infoblox.com/products/threat-defense/)** can stop the DNS lookup. **Better together** turns both on: visibility plus enforcement. Unchecking either one clears Better together.
 
 The page always shows what a breach like this costs without protection, using industry averages from IBM’s [Cost of a Data Breach Report 2026](https://www.ibm.com/reports/data-breach) (Ponemon Institute, 602 breached organizations, March 2025 to February 2026): $5.89M for a breach involving an AI model prompt injection incident, a global average of $4.99M (a record, up 12%), and a US average of $11.5M. Those figures are not a cost calculated for this scenario. At the end of a run the step panel states the outcome once. When a layer was on, that panel also says what this simulation does with no protection: the payroll file and saved passwords reach the unknown host, no alert fires, and the employee sees a normal summary, plus the kind of office disruption that often follows. No dollar saving is claimed for any product, and no cost is invented beyond the IBM averages above.
 
-**Disclosure:** the author works at Kentik / Infoblox. This is a personal, educational demo, not an official Kentik or Infoblox resource, and not endorsed by either company. The ECP layer is a simplified, generic illustration. Product names are trademarks of their respective owners.
+**Disclosure:** the author works at Kentik / Infoblox. This is a personal, educational demo, not an official Kentik or Infoblox resource, and not endorsed by either company. Product names are trademarks of their respective owners.
 
 ## What you can do on the page
 
@@ -60,7 +59,7 @@ Optional URL parameters: `?protected=1` (start in protected mode), `?autoplay=1`
 
 This is an **educational simulation**. The company, PDF, plugin, host names, policies and outcomes in the scenario are **fictional** and simplified for teaching. It doesn't rate any real product. Product categories such as “desktop AI assistant” and “MCP connector” are used generically.
 
-**Disclosure:** the author works at Kentik / Infoblox. This is a personal, educational demo, not an official Kentik or Infoblox resource, and not endorsed by either company. The ECP layer is a simplified, generic illustration. Product names are trademarks of their respective owners. It is provided **as-is, with no warranty**; see [LICENSE](LICENSE).
+**Disclosure:** the author works at Kentik / Infoblox. This is a personal, educational demo, not an official Kentik or Infoblox resource, and not endorsed by either company. Product names are trademarks of their respective owners. It is provided **as-is, with no warranty**; see [LICENSE](LICENSE).
 
 ## Author
 

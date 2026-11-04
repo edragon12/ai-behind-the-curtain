@@ -256,9 +256,9 @@ body.present .card .dec,body.present .card .fin{font-size:20px}
 
   <div class="hide-present" id="related">
     <h2>Related tools</h2>
-    <p style="color:var(--text2);margin-top:-6px">The same upload can be met in more than one place. <b>ECP</b> in the diagram is a generic control on the laptop. In the bar, <a href="https://www.infoblox.com/products/threat-defense/" rel="noopener">Infoblox</a> (DNS security) can block the DNS lookup, and <a href="https://www.kentik.com/product/kentik-platform/" rel="noopener">Kentik</a> detects and alerts. Kentik does not block. Better together is both: visibility plus enforcement.</p>
+    <p style="color:var(--text2);margin-top:-6px">The same upload can be met in more than one place. In the bar, <a href="https://www.infoblox.com/products/threat-defense/" rel="noopener">Infoblox</a> (DNS security) can block the DNS lookup, and <a href="https://www.kentik.com/product/kentik-platform/" rel="noopener">Kentik</a> detects and alerts. Kentik does not block. Better together is both: visibility plus enforcement.</p>
     <footer>
-      Disclosure: the author works at Kentik / Infoblox. This is a personal, educational demo, not an official Kentik or Infoblox resource, and not endorsed by either company. The ECP layer is a simplified, generic illustration. Product names are trademarks of their respective owners.<br>
+      Disclosure: the author works at Kentik / Infoblox. This is a personal, educational demo, not an official Kentik or Infoblox resource, and not endorsed by either company. Product names are trademarks of their respective owners.<br>
       Built by <a href="https://www.linkedin.com/in/martin-tully-37704170" rel="noopener">Martin Tully</a> · MIT License
     </footer>
   </div>
@@ -599,8 +599,8 @@ function render(){
     return null;
   }
   var h=[];
-  [[8,144,"USER"],[160,745,"WORK LAPTOP (ENDPOINT)"],[915,130,"NETWORK"],[1055,217,"CLOUD"]].forEach(function(z){
-    h.push('<rect class="zone" x="'+z[0]+'" y="40" width="'+z[1]+'" height="540" rx="12"/><text class="zlabel" x="'+(z[0]+10)+'" y="30">'+z[2]+'</text>');
+  [[8,144,468,"USER"],[160,745,468,"WORK LAPTOP (ENDPOINT)"],[915,130,540,"NETWORK"],[1055,217,540,"CLOUD"]].forEach(function(z){
+    h.push('<rect class="zone" x="'+z[0]+'" y="40" width="'+z[1]+'" height="'+z[2]+'" rx="12"/><text class="zlabel" x="'+(z[0]+10)+'" y="30">'+z[3]+'</text>');
   });
   h.push('<rect x="1074" y="182" width="176" height="198" rx="10" style="fill:none;stroke:var(--border2);stroke-dasharray:4 4"/><text class="zlabel" x="1082" y="196" style="font-size:15px">THE AI MODEL</text>');
   STATIC.forEach(function(e){
@@ -609,7 +609,7 @@ function render(){
     h.push('<path class="edge" d="'+pathD(geom(e[0],e[1]))+'"'+(op?' style="stroke:var(--red);stroke-opacity:'+op+';stroke-width:2.6"':'')+'"/>');
   });
   var flowStroke=dnsBlock?green:cc;
-  act.forEach(function(e){h.push('<path d="'+pathD(geom(e[0],e[1]))+'" style="fill:none;stroke:'+flowStroke+';stroke-width:3.4;stroke-linecap:round'+(e[0]==="guard"?';stroke-dasharray:6 5':'')+'"/>');});
+  act.forEach(function(e){if(e[0]==="guard"||e[1]==="guard")return;h.push('<path d="'+pathD(geom(e[0],e[1]))+'" style="fill:none;stroke:'+flowStroke+';stroke-width:3.4;stroke-linecap:round"/>');});
   if(dnsHold){
     if(dnsHold.rest){
       s19Edges().slice(0,2).forEach(function(e){
@@ -620,12 +620,6 @@ function render(){
     for(var si=1;si<=samples;si++){var spth=pt(dg,dloc*si/samples);pd+=" L"+spth[0]+","+spth[1];}
     h.push('<path d="'+pd+'" style="fill:none;stroke:'+green+';stroke-width:3.6;stroke-linecap:round"/>');
   }
-  var G=NODE.guard, gAct=an.guard||(S.prot&&cur.guardOnly);
-  var gTitle=S.prot?"Endpoint Control and Prevention (ECP) on the laptop":"No AI-aware control on this laptop";
-  var gSub=S.prot?"visibility · posture · runtime: allow / hold for approval / block at the tool call":"generic illustration on the laptop";
-  h.push('<g><title>'+esc("Endpoint Control and Prevention (ECP)\nIn everyday terms: "+EDAY.guard+"\n"+COMP.guard)+'</title><rect x="'+(G.x-G.w/2)+'" y="'+(G.y-G.h/2)+'" width="'+G.w+'" height="'+G.h+'" rx="10" style="fill:'+(S.prot?css("greenSoft"):css("panel2"))+';stroke:'+(S.prot?green:css("border2"))+';stroke-width:'+(gAct?3:1.5)+(S.prot?'':';stroke-dasharray:6 5')+'"/>'+
-    fitted(G.x,G.y-5,"",gTitle,G.w-40,16).replace('class=""','style="font:800 16px var(--font);fill:'+(S.prot?green:css("text3"))+'"')+
-    fitted(G.x,G.y+13,"nsub",gSub,G.w-40,13)+'</g>');
   NODES.forEach(function(n){
     if(n.id==="guard") return;
     var a=!!an[n.id], tg=tag(n.id);
@@ -637,8 +631,7 @@ function render(){
       fitted(n.x,n.y-4,"ntitle",n.title,n.w-22,16)+fitted(n.x,n.y+13,"nsub",n.sub,n.w-20,13)+
       (tg?fitted(n.x,n.y+n.h/2+18,"ntag",tg[0],Math.min(n.w+6,132),15).replace('class="ntag"','class="ntag" style="fill:'+tg[1]+'"'):'')+'</g>');
   });
-  if(S.prot&&cur.verdict&&cur.bpos&&tt>0.3) h.push('<path d="M'+cur.bpos[0]+',500 L'+cur.bpos[0]+','+(cur.bpos[1]+10)+'" style="fill:none;stroke:'+green+';stroke-width:2;stroke-dasharray:4 4"/>');
-  packets.forEach(function(p){var pc=dnsBlock?green:cc;h.push('<circle cx="'+p[0]+'" cy="'+p[1]+'" r="12" style="fill:'+pc+';opacity:.25"/><circle cx="'+p[0]+'" cy="'+p[1]+'" r="6" style="fill:'+pc+'"/>');});
+  packets.forEach(function(p,pi){if(act[pi]&&(act[pi][0]==="guard"||act[pi][1]==="guard"))return;var pc=dnsBlock?green:cc;h.push('<circle cx="'+p[0]+'" cy="'+p[1]+'" r="12" style="fill:'+pc+';opacity:.25"/><circle cx="'+p[0]+'" cy="'+p[1]+'" r="6" style="fill:'+pc+'"/>');});
   if(ecpBlock&&tt>=0.99&&packets.length){var p=packets[0];h.push('<circle cx="'+p[0]+'" cy="'+p[1]+'" r="13" style="fill:none;stroke:'+green+';stroke-width:2.5"/><path d="M'+(p[0]-6)+','+(p[1]-6)+' L'+(p[0]+6)+','+(p[1]+6)+' M'+(p[0]+6)+','+(p[1]-6)+' L'+(p[0]-6)+','+(p[1]+6)+'" style="stroke:'+green+';stroke-width:2.5"/>');}
   if(dnsHold&&dnsHold.show){
     var sp=dnsHold.rest?dnsPoint():pt(dnsHold.g,DNS_STOP);
