@@ -479,12 +479,14 @@ function fitted(x,y,cls,content,maxW,size){
   return '<text class="'+cls+'" x="'+x+'" y="'+y+'" text-anchor="middle"'+extra+'>'+esc(content)+'</text>';
 }
 var DWELL=0.6;
+// Compare timing at 1×. Speed buttons scale every value. Lower motion is slower.
+// motion was 12 and dwell was 0.6: a step took dur×1.6/12 ms. Now motion is 6 and dwell is 0.8, about 2× overall, with a slightly longer settle between steps.
+var COMPARE={motion:6,dwell:0.8,noticedMs:3000,readMs:2800};
 var STATIC=[];(function(){var seen={};STEPS.forEach(function(s){s.edges.forEach(function(e){if(e[0]==="guard")return;var k=ekey(e[0],e[1]);if(!seen[k]){seen[k]=1;STATIC.push(e);}});});})();
 
 var q=new URLSearchParams(location.search);
 var SHORT=q.get("captions")==="short";
 var S={prot:q.get("protected")==="1",dns:q.get("infoblox")==="1",net:q.get("kentik")==="1",idx:0,t:0,playing:false,once:false,speed:parseFloat(q.get("speed")||"1")||1,compare:null};
-var COMPARE_BOOST=12;
 var REDUCE_MOTION=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 var manual=q.get("manual")==="1";
 if(q.get("present")==="1") document.body.classList.add("present");
@@ -494,10 +496,12 @@ function steps(){return S.prot?STEPS:STEPS_OFF;}
 function advance(dt){
   if(!S.playing&&!S.once) return;
   var st=steps(), s=st[S.idx]; if(!s){S.playing=false;return;}
-  var rate=S.speed*(S.compare&&(S.compare.phase==="off"||S.compare.phase==="on")?COMPARE_BOOST:1);
+  var comparing=S.compare&&(S.compare.phase==="off"||S.compare.phase==="on");
+  var rate=S.speed*(comparing?COMPARE.motion:1);
+  var dwell=comparing?COMPARE.dwell:DWELL;
   var nt=S.t+dt*rate/dur(s);
   if(S.once&&nt>=1){S.t=1;S.once=false;return;}
-  if(nt>=1+DWELL){
+  if(nt>=1+dwell){
     if(S.idx>=st.length-1){S.t=1;S.playing=false;return;}
     S.idx++; nt=0;
   }
@@ -516,9 +520,10 @@ function loop(now){
   }else if(S.playing||S.once){
     var wasPlaying=S.playing;
     advance(dt);
-    if(S.compare&&S.compare.phase==="on"&&!S.compare.dnsHeld&&S.dns&&!S.prot){
+    if(S.compare&&S.compare.phase==="on"&&S.dns&&!S.prot){
       var cs=steps()[S.idx];
-      if(cs&&cs.id==="s19"&&S.t>=1){S.compare.dnsHeld=true;S.compare.hold=1500;}
+      if(cs&&cs.id==="s19"&&!S.compare.alertHeld){S.compare.alertHeld=true;S.compare.hold=COMPARE.readMs;}
+      else if(cs&&cs.id==="s19"&&!S.compare.dnsHeld&&S.t>=1){S.compare.dnsHeld=true;S.compare.hold=COMPARE.readMs;}
     }
     if(S.compare&&wasPlaying&&!S.playing&&S.idx>=steps().length-1&&S.t>=1) onComparePassDone();
     if(now-lastPaint>28){lastPaint=now;render();}
@@ -787,17 +792,17 @@ function beginCompare(){
     S.prot=false; S.dns=true; S.net=true; S.playing=false; S.once=false;
     go(steps().length-1,1); render(); return;
   }
-  S.compare={phase:"off",saved:saved,left:0,hold:0,dnsHeld:false};
+  S.compare={phase:"off",saved:saved,left:0,hold:0,alertHeld:false,dnsHeld:false};
   S.prot=false; S.dns=false; S.net=false; S.once=false; go(0,0); S.playing=true; render();
 }
 function beginCompareOn(){
   if(!S.compare) return;
-  S.compare.phase="on"; S.compare.left=0; S.compare.hold=0; S.compare.dnsHeld=false;
+  S.compare.phase="on"; S.compare.left=0; S.compare.hold=0; S.compare.alertHeld=false; S.compare.dnsHeld=false;
   S.prot=false; S.dns=true; S.net=true; S.once=false; go(0,0); S.playing=true; render();
 }
 function onComparePassDone(){
   if(!S.compare) return;
-  if(S.compare.phase==="off"){S.compare.phase="pause"; S.compare.left=2000; render();}
+  if(S.compare.phase==="off"){S.compare.phase="pause"; S.compare.left=COMPARE.noticedMs; render();}
   else if(S.compare.phase==="on"){S.compare.phase="done"; S.playing=false; render();}
 }
 function burst(x,y,kind){
