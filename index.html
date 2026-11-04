@@ -101,6 +101,16 @@ button.btn:focus-visible,.seg button:focus-visible,.chk:focus-visible,.depth-ite
   .burst{animation:none;transform:scale(.58) rotate(-7deg);opacity:1}
   .burst.ib{transform:scale(.40) rotate(-7deg)}
 }
+.compare-banner[hidden],.compare-sum[hidden]{display:none !important}
+.compare-banner{position:absolute;z-index:3;left:180px;top:34px;max-width:min(520px,60%);margin:0;padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--panel);font-size:14px;font-weight:800;line-height:1.3}
+.compare-banner.bad{border-color:var(--red);color:var(--red)}
+.compare-banner.good{border-color:var(--green);color:var(--text)}
+.compare-sum{position:absolute;z-index:3;left:10px;right:10px;bottom:10px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.compare-sum section{margin:0;padding:8px 10px;border-radius:10px;background:var(--panel);border:1px solid var(--border);font-size:13px;line-height:1.35}
+.compare-sum h3{margin:0 0 4px;font-size:13px}
+.compare-sum ul{margin:0;padding-left:1.1em}
+.compare-sum .bad{border-color:var(--red)}
+.compare-sum .good{border-color:var(--green)}
 .dots{margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 .dot{width:14px;height:14px;border-radius:7px;border:1px solid var(--border2);cursor:pointer;background:transparent;padding:0}
 .dot.cur{width:26px}
@@ -228,6 +238,7 @@ body.present .card .dec,body.present .card .fin{font-size:20px}
   <div class="controls" id="controls">
     <h2 class="flow hide-present">Live flow</h2>
     <button class="btn primary" id="playBtn" type="button">Play</button>
+    <button class="btn" id="compareBtn" type="button" aria-pressed="false">Compare: without vs with</button>
     <button class="btn" id="stepBtn" type="button">Step</button>
     <button class="btn" id="resetBtn" type="button">Reset</button>
     <div class="seg" id="speedSeg" role="group" aria-label="Speed">
@@ -235,7 +246,7 @@ body.present .card .dec,body.present .card .fin{font-size:20px}
     </div>
     <span class="mode" id="modeLbl">Mode: no extra controls (default)</span>
   </div>
-  <div class="stage"><svg id="svg" viewBox="0 0 1280 590" preserveAspectRatio="xMidYMin meet" role="img" aria-label="AI assistant request flow diagram"></svg><svg id="fx" viewBox="0 0 1280 590" preserveAspectRatio="xMidYMin meet" aria-hidden="true"></svg></div>
+  <div class="stage"><svg id="svg" viewBox="0 0 1280 590" preserveAspectRatio="xMidYMin meet" role="img" aria-label="AI assistant request flow diagram"></svg><svg id="fx" viewBox="0 0 1280 590" preserveAspectRatio="xMidYMin meet" aria-hidden="true"></svg><p class="compare-banner" id="compareBanner" hidden aria-live="polite"></p><div class="compare-sum" id="compareSum" hidden role="region" aria-label="Without versus with"><section class="bad"><h3>Without Kentik or Infoblox</h3><ul><li>The upload succeeds silently.</li><li>The payroll file and saved passwords leave.</li><li>No alert fires.</li><li>IBM average for a prompt-injection breach: $5.89M. Not a cost for this run.</li></ul></section><section class="good"><h3>With Kentik + Infoblox</h3><ul><li>Kentik sees the outbound flow in NetFlow and alerts.</li><li>Firewall or proxy syslog confirms the session.</li><li>Infoblox blocks the DNS lookup.</li><li>The files stay on the laptop.</li></ul></section></div></div>
 </div>
   <div class="dots hide-present" id="dots"></div>
 
@@ -453,7 +464,10 @@ function pt(g,t){var u=1-t; if(g.c) return [u*u*g.p0[0]+2*u*t*g.c[0]+t*t*g.p1[0]
 function pathD(g){return g.c?"M"+g.p0+" Q"+g.c+" "+g.p1:"M"+g.p0+" L"+g.p1;}
 function ekey(a,b){return a<b?a+"|"+b:b+"|"+a;}
 function dur(s){return s.parallel?1900:1300+650*s.edges.length;}
-function edLine(s){var useG=S.prot&&s.ged; var t=useG?s.ged:s.ed; var n=NODE[s.focus]; var who=""; if(!t&&n){t=EDAY[n.id]; who=(n.id==="guard"?"ECP":n.title);} return {who:who,text:t||""};}
+function edLine(s){
+  if(s.id==="s19"&&S.dns&&!S.prot) return {who:"",text:"The lookup is refused, so the payroll file and passwords stay on the laptop."};
+  var useG=S.prot&&s.ged; var t=useG?s.ged:s.ed; var n=NODE[s.focus]; var who=""; if(!t&&n){t=EDAY[n.id]; who=(n.id==="guard"?"ECP":n.title);} return {who:who,text:t||""};
+}
 function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
 function fitted(x,y,cls,content,maxW,size){
   var est=String(content).length*size*0.54;
@@ -465,7 +479,9 @@ var STATIC=[];(function(){var seen={};STEPS.forEach(function(s){s.edges.forEach(
 
 var q=new URLSearchParams(location.search);
 var SHORT=q.get("captions")==="short";
-var S={prot:q.get("protected")==="1",dns:q.get("infoblox")==="1",net:q.get("kentik")==="1",idx:0,t:0,playing:false,once:false,speed:parseFloat(q.get("speed")||"1")||1};
+var S={prot:q.get("protected")==="1",dns:q.get("infoblox")==="1",net:q.get("kentik")==="1",idx:0,t:0,playing:false,once:false,speed:parseFloat(q.get("speed")||"1")||1,compare:null};
+var COMPARE_BOOST=12;
+var REDUCE_MOTION=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 var manual=q.get("manual")==="1";
 if(q.get("present")==="1") document.body.classList.add("present");
 if(q.get("captions")==="short") document.body.classList.add("short");
@@ -474,7 +490,8 @@ function steps(){return S.prot?STEPS:STEPS_OFF;}
 function advance(dt){
   if(!S.playing&&!S.once) return;
   var st=steps(), s=st[S.idx]; if(!s){S.playing=false;return;}
-  var nt=S.t+dt*S.speed/dur(s);
+  var rate=S.speed*(S.compare&&(S.compare.phase==="off"||S.compare.phase==="on")?COMPARE_BOOST:1);
+  var nt=S.t+dt*rate/dur(s);
   if(S.once&&nt>=1){S.t=1;S.once=false;return;}
   if(nt>=1+DWELL){
     if(S.idx>=st.length-1){S.t=1;S.playing=false;return;}
@@ -486,7 +503,15 @@ var lastTs=-1,lastPaint=0;
 function loop(now){
   if(lastTs<0) lastTs=now;
   var dt=Math.min(now-lastTs,100); lastTs=now;
-  if(S.playing||S.once){advance(dt); if(now-lastPaint>28){lastPaint=now;render();}}
+  if(S.compare&&S.compare.phase==="pause"){
+    S.compare.left-=dt*S.speed;
+    if(S.compare.left<=0) beginCompareOn();
+  }else if(S.playing||S.once){
+    var wasPlaying=S.playing;
+    advance(dt);
+    if(S.compare&&wasPlaying&&!S.playing&&S.idx>=steps().length-1&&S.t>=1) onComparePassDone();
+    if(now-lastPaint>28){lastPaint=now;render();}
+  }
   requestAnimationFrame(loop);
 }
 
@@ -601,6 +626,7 @@ function render(){
 
   // controls
   document.getElementById("playBtn").textContent=S.playing?"Pause":finished?"Replay":"Play";
+  paintCompare();
   function syncLayer(id,on){
     var el=document.getElementById(id);
     el.classList.toggle("on",on);
@@ -655,13 +681,61 @@ function render(){
 }
 
 function go(i,t){S.idx=i;S.t=t;}
-function play(){ if(S.playing){S.playing=false;render();return;} var st=steps(); if(S.idx>=st.length-1&&S.t>=1) go(0,0); S.once=false;S.playing=true;render(); }
-function step(){ S.playing=false; if(S.t>=1){ if(S.idx<steps().length-1) go(S.idx+1,0); else {render();return;} } S.once=true; render(); }
-function reset(){S.playing=false;S.once=false;go(0,0);render();}
+function play(){
+  if(S.compare&&S.compare.phase==="done") restoreCompare();
+  if(S.compare&&S.compare.phase==="pause"){beginCompareOn();return;}
+  if(S.playing){S.playing=false;render();return;}
+  var st=steps(); if(S.idx>=st.length-1&&S.t>=1) go(0,0); S.once=false;S.playing=true;render();
+}
+function step(){ if(S.compare) restoreCompare(); S.playing=false; if(S.t>=1){ if(S.idx<steps().length-1) go(S.idx+1,0); else {render();return;} } S.once=true; render(); }
+function reset(){ if(S.compare) restoreCompare(); S.playing=false;S.once=false;go(0,0);render();}
 function replay(autoplay){S.once=false;go(0,0);S.playing=autoplay!==false;render();}
-function setProt(v,autoplay){S.prot=!!v;replay(autoplay);}
-function setDns(v,autoplay){S.dns=!!v;replay(autoplay);}
-function setNet(v,autoplay){S.net=!!v;replay(autoplay);}
+function setProt(v,autoplay){if(S.compare) restoreCompare(); S.prot=!!v;replay(autoplay);}
+function setDns(v,autoplay){if(S.compare) restoreCompare(); S.dns=!!v;replay(autoplay);}
+function setNet(v,autoplay){if(S.compare) restoreCompare(); S.net=!!v;replay(autoplay);}
+function clearCompareUi(){
+  var b=document.getElementById("compareBanner"); b.hidden=true; b.textContent=""; b.className="compare-banner";
+  document.getElementById("compareSum").hidden=true;
+  var btn=document.getElementById("compareBtn"); btn.setAttribute("aria-pressed","false");
+}
+function restoreCompare(){
+  if(!S.compare) return;
+  var saved=S.compare.saved;
+  S.compare=null; S.playing=false; S.once=false;
+  S.prot=saved.prot; S.dns=saved.dns; S.net=saved.net;
+  clearCompareUi();
+}
+function paintCompare(){
+  var b=document.getElementById("compareBanner"), sum=document.getElementById("compareSum"), btn=document.getElementById("compareBtn");
+  if(!S.compare){clearCompareUi();return;}
+  var phase=S.compare.phase;
+  btn.setAttribute("aria-pressed", phase==="done"?"false":"true");
+  if(phase==="off"||phase==="pause"){b.hidden=false; b.className="compare-banner bad"; b.textContent="Without Kentik or Infoblox";}
+  else if(phase==="on"){b.hidden=false; b.className="compare-banner good"; b.textContent="With Kentik + Infoblox (better together)";}
+  else {b.hidden=true; b.textContent="";}
+  sum.hidden=phase!=="done";
+}
+function beginCompare(){
+  if(S.compare&&S.compare.phase!=="done"){restoreCompare(); render(); return;}
+  var saved={prot:S.prot,dns:S.dns,net:S.net};
+  if(REDUCE_MOTION){
+    S.compare={phase:"done",saved:saved,left:0};
+    S.prot=false; S.dns=true; S.net=true; S.playing=false; S.once=false;
+    go(steps().length-1,1); render(); return;
+  }
+  S.compare={phase:"off",saved:saved,left:0};
+  S.prot=false; S.dns=false; S.net=false; S.once=false; go(0,0); S.playing=true; render();
+}
+function beginCompareOn(){
+  if(!S.compare) return;
+  S.compare.phase="on"; S.compare.left=0;
+  S.prot=false; S.dns=true; S.net=true; S.once=false; go(0,0); S.playing=true; render();
+}
+function onComparePassDone(){
+  if(!S.compare) return;
+  if(S.compare.phase==="off"){S.compare.phase="pause"; S.compare.left=2000; render();}
+  else if(S.compare.phase==="on"){S.compare.phase="done"; S.playing=false; render();}
+}
 function burst(x,y,kind){
   var spec=kind==="ib"?{fill:"#ffe14a",stroke:"#111",word:"BLOCKED!",sub:"Infoblox DNS",ink:"#9b0c12"}:
     kind==="kt"?{fill:"#D3400F",stroke:"#3a1204",word:"ALERT!",sub:"Kentik flow flagged",ink:"#fff8f4"}:
@@ -716,7 +790,8 @@ function bindChk(id,get,set){
 }
 bindChk("depthDns",function(){return S.dns;},setDns);
 bindChk("depthNet",function(){return S.net;},setNet);
-bindChk("depthBoth",function(){return S.dns&&S.net;},function(v){S.dns=!!v;S.net=!!v;replay();});
+bindChk("depthBoth",function(){return S.dns&&S.net;},function(v){if(S.compare) restoreCompare(); S.dns=!!v;S.net=!!v;replay();});
+document.getElementById("compareBtn").addEventListener("click",beginCompare);
 document.getElementById("dots").addEventListener("click",function(e){var b=e.target.closest(".dot");if(!b)return;S.playing=false;go(parseInt(b.getAttribute("data-i"),10),0);S.once=true;render();});
 
 // theme toggle
