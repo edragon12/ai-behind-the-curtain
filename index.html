@@ -101,6 +101,25 @@ button.btn:focus-visible,.seg button:focus-visible,.chk:focus-visible,.depth-ite
   .burst{animation:none;transform:scale(.58) rotate(-7deg);opacity:1}
   .burst.ib{transform:scale(.40) rotate(-7deg)}
 }
+.compare-banner[hidden],.compare-sum[hidden]{display:none !important}
+.compare-banner{position:absolute;z-index:3;left:180px;top:34px;max-width:min(520px,60%);margin:0;padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--panel);font-size:14px;font-weight:800;line-height:1.3}
+.compare-banner.bad{border-color:var(--red);color:var(--red)}
+.compare-banner.good{border-color:var(--green);color:var(--text)}
+.compare-banner .pass-end,.compare-sum .pass-end{margin:4px 0 0;font-size:13px;font-weight:800;color:var(--text)}
+.compare-sum{position:absolute;z-index:3;left:10px;right:10px;bottom:10px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.compare-sum section{margin:0;padding:8px 10px;border-radius:10px;background:var(--panel);border:1px solid var(--border);font-size:13px;line-height:1.35}
+.compare-sum h3{margin:0 0 4px;font-size:13px}
+.compare-sum ul{margin:0;padding-left:1.1em}
+.compare-sum .bad{border-color:var(--red)}
+.compare-sum .good{border-color:var(--green)}
+.kalert{margin-top:8px;padding:8px 10px;border:1px solid var(--border);border-left:4px solid var(--kentik);border-radius:10px;background:var(--panel);color:var(--text);font-size:12px;line-height:1.35}
+.kalert .kicker{font-size:11px;font-weight:800;letter-spacing:.04em;color:var(--kentik)}
+.kalert .ht{font-weight:800;font-size:13px;line-height:1.3;margin:1px 0 4px}
+.kalert dl{display:grid;grid-template-columns:auto 1fr;gap:1px 8px;margin:0}
+.kalert dt{color:var(--text3);font-weight:700}
+.kalert dd{margin:0;overflow-wrap:anywhere}
+.kalert .syslog{margin:6px 0 0;font-family:var(--mono);font-size:11px;line-height:1.35;color:var(--text2);overflow-wrap:anywhere}
+.kalert .noblock{margin:4px 0 0;font-weight:800}
 .dots{margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 .dot{width:14px;height:14px;border-radius:7px;border:1px solid var(--border2);cursor:pointer;background:transparent;padding:0}
 .dot.cur{width:26px}
@@ -228,6 +247,7 @@ body.present .card .dec,body.present .card .fin{font-size:20px}
   <div class="controls" id="controls">
     <h2 class="flow hide-present">Live flow</h2>
     <button class="btn primary" id="playBtn" type="button">Play</button>
+    <button class="btn" id="compareBtn" type="button" aria-pressed="false">Compare: without vs with</button>
     <button class="btn" id="stepBtn" type="button">Step</button>
     <button class="btn" id="resetBtn" type="button">Reset</button>
     <div class="seg" id="speedSeg" role="group" aria-label="Speed">
@@ -235,7 +255,7 @@ body.present .card .dec,body.present .card .fin{font-size:20px}
     </div>
     <span class="mode" id="modeLbl">Mode: no extra controls (default)</span>
   </div>
-  <div class="stage"><svg id="svg" viewBox="0 0 1280 590" preserveAspectRatio="xMidYMin meet" role="img" aria-label="AI assistant request flow diagram"></svg><svg id="fx" viewBox="0 0 1280 590" preserveAspectRatio="xMidYMin meet" aria-hidden="true"></svg></div>
+  <div class="stage"><svg id="svg" viewBox="0 0 1280 590" preserveAspectRatio="xMidYMin meet" role="img" aria-label="AI assistant request flow diagram"></svg><svg id="fx" viewBox="0 0 1280 590" preserveAspectRatio="xMidYMin meet" aria-hidden="true"></svg><p class="compare-banner" id="compareBanner" hidden aria-live="polite"></p><div class="compare-sum" id="compareSum" hidden role="region" aria-label="Without versus with"><section class="bad"><h3>Without Kentik or Infoblox</h3><ul><li>The upload succeeds silently.</li><li>The payroll file and saved passwords leave.</li><li>No alert fires.</li><li>IBM average for a prompt-injection breach: $5.89M. Not a cost for this run.</li></ul><p class="pass-end">No one noticed (simulated)</p></section><section class="good"><h3>With Kentik + Infoblox</h3><ul><li>Kentik sees the outbound flow in NetFlow and alerts.</li><li>Firewall or proxy syslog confirms the session.</li><li>Infoblox blocks the DNS lookup.</li><li>The files stay on the laptop.</li></ul><p class="pass-end">Alerted in seconds (simulated)</p></section></div></div>
 </div>
   <div class="dots hide-present" id="dots"></div>
 
@@ -453,7 +473,10 @@ function pt(g,t){var u=1-t; if(g.c) return [u*u*g.p0[0]+2*u*t*g.c[0]+t*t*g.p1[0]
 function pathD(g){return g.c?"M"+g.p0+" Q"+g.c+" "+g.p1:"M"+g.p0+" L"+g.p1;}
 function ekey(a,b){return a<b?a+"|"+b:b+"|"+a;}
 function dur(s){return s.parallel?1900:1300+650*s.edges.length;}
-function edLine(s){var useG=S.prot&&s.ged; var t=useG?s.ged:s.ed; var n=NODE[s.focus]; var who=""; if(!t&&n){t=EDAY[n.id]; who=(n.id==="guard"?"ECP":n.title);} return {who:who,text:t||""};}
+function edLine(s){
+  if(s.id==="s19"&&S.dns&&!S.prot) return {who:"",text:"The lookup is refused, so the payroll file and passwords stay on the laptop."};
+  var useG=S.prot&&s.ged; var t=useG?s.ged:s.ed; var n=NODE[s.focus]; var who=""; if(!t&&n){t=EDAY[n.id]; who=(n.id==="guard"?"ECP":n.title);} return {who:who,text:t||""};
+}
 function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
 function fitted(x,y,cls,content,maxW,size){
   var est=String(content).length*size*0.54;
@@ -465,7 +488,9 @@ var STATIC=[];(function(){var seen={};STEPS.forEach(function(s){s.edges.forEach(
 
 var q=new URLSearchParams(location.search);
 var SHORT=q.get("captions")==="short";
-var S={prot:q.get("protected")==="1",dns:q.get("infoblox")==="1",net:q.get("kentik")==="1",idx:0,t:0,playing:false,once:false,speed:parseFloat(q.get("speed")||"1")||1};
+var S={prot:q.get("protected")==="1",dns:q.get("infoblox")==="1",net:q.get("kentik")==="1",idx:0,t:0,playing:false,once:false,speed:parseFloat(q.get("speed")||"1")||1,compare:null};
+var COMPARE_BOOST=12;
+var REDUCE_MOTION=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 var manual=q.get("manual")==="1";
 if(q.get("present")==="1") document.body.classList.add("present");
 if(q.get("captions")==="short") document.body.classList.add("short");
@@ -474,7 +499,8 @@ function steps(){return S.prot?STEPS:STEPS_OFF;}
 function advance(dt){
   if(!S.playing&&!S.once) return;
   var st=steps(), s=st[S.idx]; if(!s){S.playing=false;return;}
-  var nt=S.t+dt*S.speed/dur(s);
+  var rate=S.speed*(S.compare&&(S.compare.phase==="off"||S.compare.phase==="on")?COMPARE_BOOST:1);
+  var nt=S.t+dt*rate/dur(s);
   if(S.once&&nt>=1){S.t=1;S.once=false;return;}
   if(nt>=1+DWELL){
     if(S.idx>=st.length-1){S.t=1;S.playing=false;return;}
@@ -486,7 +512,22 @@ var lastTs=-1,lastPaint=0;
 function loop(now){
   if(lastTs<0) lastTs=now;
   var dt=Math.min(now-lastTs,100); lastTs=now;
-  if(S.playing||S.once){advance(dt); if(now-lastPaint>28){lastPaint=now;render();}}
+  if(S.compare&&S.compare.hold>0){
+    S.compare.hold-=dt*S.speed;
+    if(now-lastPaint>28){lastPaint=now;render();}
+  }else if(S.compare&&S.compare.phase==="pause"){
+    S.compare.left-=dt*S.speed;
+    if(S.compare.left<=0) beginCompareOn();
+  }else if(S.playing||S.once){
+    var wasPlaying=S.playing;
+    advance(dt);
+    if(S.compare&&S.compare.phase==="on"&&!S.compare.dnsHeld&&S.dns&&!S.prot){
+      var cs=steps()[S.idx];
+      if(cs&&cs.id==="s19"&&S.t>=1){S.compare.dnsHeld=true;S.compare.hold=1500;}
+    }
+    if(S.compare&&wasPlaying&&!S.playing&&S.idx>=steps().length-1&&S.t>=1) onComparePassDone();
+    if(now-lastPaint>28){lastPaint=now;render();}
+  }
   requestAnimationFrame(loop);
 }
 
@@ -498,23 +539,44 @@ function render(){
   var has=function(id){return !!reached[id];};
   var red=css("red"),green=css("green"),amber=css("amber"),blue=css("blue");
   var est={};
-  st.forEach(function(s,i){ if(!s.bad||!has(s.id)||i===idx) return; if(S.prot&&s.verdict==="block") return; s.edges.forEach(function(e){est[ekey(e[0],e[1])]=S.prot?0.35:0.65;}); });
+  st.forEach(function(s,i){
+    if(!s.bad||!has(s.id)||i===idx) return;
+    if(S.prot&&s.verdict==="block") return;
+    if(s.id==="s19"&&S.dns&&!S.prot) return;
+    s.edges.forEach(function(e){est[ekey(e[0],e[1])]=S.prot?0.35:0.65;});
+  });
+  var ecpBlock=S.prot&&cur.verdict==="block";
   var dnsBlock=!S.prot&&S.dns&&cur.id==="s19";
-  var blocked=(S.prot&&cur.verdict==="block")||dnsBlock;
-  var segs=blocked?[cur.edges[0]]:cur.edges;
+  var dnsLive=!S.prot&&S.dns&&(cur.id==="s19"||has("s19"));
+  var segs=ecpBlock?[cur.edges[0]]:cur.edges;
   var cc=cur.guardOnly?green:cur.bad?red:blue;
   var packets=[],act=[];
+  var DNS_STOP=0.42;
+  var dnsHold=null;
+  function s19Edges(){var hit=null;STEPS.forEach(function(s){if(s.id==="s19")hit=s.edges;});return hit;}
+  function dnsPoint(){var edges=s19Edges(), last=edges[edges.length-1]; return pt(geom(last[0],last[1]),DNS_STOP);}
   if(S.t>0||idx>0){
-    if(cur.parallel){segs.forEach(function(e){act.push(e);packets.push(pt(geom(e[0],e[1]),tt));});}
-    else if(blocked){act.push(segs[0]);packets.push(pt(geom(segs[0][0],segs[0][1]),tt*0.45));}
-    else{var n=segs.length,f=tt*n,i=Math.min(Math.floor(f),n-1),loc=Math.min(f-i,1);for(var k=0;k<=i;k++)act.push(segs[k]);packets.push(pt(geom(segs[i][0],segs[i][1]),loc));}
+    if(dnsBlock){
+      var progress=REDUCE_MOTION?1:tt;
+      var edges=cur.edges, last=edges.length-1, travel=progress*(last+DNS_STOP);
+      var seg=Math.min(Math.floor(travel), last);
+      var loc=seg===last?Math.min(travel-last,DNS_STOP):Math.min(travel-seg,1);
+      for(var k=0;k<seg;k++) act.push(edges[k]);
+      var gNow=geom(edges[seg][0],edges[seg][1]);
+      packets.push(pt(gNow,loc));
+      if(seg===last) dnsHold={g:gNow,loc:loc,show:progress>=0.98||REDUCE_MOTION};
+      else dnsHold={g:gNow,loc:loc,show:false};
+    }else if(cur.parallel){segs.forEach(function(e){act.push(e);packets.push(pt(geom(e[0],e[1]),tt));});}
+    else if(ecpBlock){act.push(segs[0]);packets.push(pt(geom(segs[0][0],segs[0][1]),tt*0.45));}
+    else{var n=segs.length,f=tt*n,i=Math.min(Math.floor(f),n-1),loc2=Math.min(f-i,1);for(var k2=0;k2<=i;k2++)act.push(segs[k2]);packets.push(pt(geom(segs[i][0],segs[i][1]),loc2));}
   }
-  var an={}; act.forEach(function(e){an[e[0]]=1;an[e[1]]=1;}); if(blocked) an[segs[0][1]]=0; if(S.prot&&cur.verdict&&tt>0.3) an.guard=1;
+  if(dnsLive&&cur.id!=="s19") dnsHold={g:geom(s19Edges()[2][0],s19Edges()[2][1]),loc:DNS_STOP,show:true,rest:1};
+  var an={}; act.forEach(function(e){an[e[0]]=1;an[e[1]]=1;}); if(ecpBlock) an[segs[0][1]]=0; if(dnsBlock) an.attacker=0; if(S.prot&&cur.verdict&&tt>0.3) an.guard=1;
   function tag(id){
     if(id==="rag"&&has("s14")) return ["hidden text in PDF",red];
     if(id==="attacker"&&has("s19")){
       if(S.prot) return ["nothing received",green];
-      if(S.dns) return ["DNS lookup blocked",green];
+      if(S.dns) return ["lookup blocked",green];
       if(S.net) return ["received · flow alerted","var(--kentik)"];
       return ["payroll + passwords received",red];
     }
@@ -530,7 +592,10 @@ function render(){
     }
     if(id==="harness"&&has("s2")) return ["connectors run without asking",amber];
     if(id==="localMcp"&&has("s5")) return ["unvetted plugin",red];
-    if(id==="secrets"&&has("s18")) return ["read by plugin",red];
+    if(id==="secrets"&&has("s18")){
+      if(S.dns&&!S.prot&&(cur.id==="s19"||has("s19"))) return ["files stay here",green];
+      return ["read by plugin",red];
+    }
     if(id==="user"&&finished){
       if(S.dns) return ["files stayed home",green];
       if(S.net) return ["answer shown, team alerted","var(--kentik)"];
@@ -543,8 +608,23 @@ function render(){
     h.push('<rect class="zone" x="'+z[0]+'" y="40" width="'+z[1]+'" height="540" rx="12"/><text class="zlabel" x="'+(z[0]+10)+'" y="30">'+z[2]+'</text>');
   });
   h.push('<rect x="1074" y="182" width="176" height="198" rx="10" style="fill:none;stroke:var(--border2);stroke-dasharray:4 4"/><text class="zlabel" x="1082" y="196" style="font-size:15px">THE AI MODEL</text>');
-  STATIC.forEach(function(e){var k=ekey(e[0],e[1]),op=est[k];h.push('<path class="edge" d="'+pathD(geom(e[0],e[1]))+'"'+(op?' style="stroke:var(--red);stroke-opacity:'+op+';stroke-width:2.6"':'')+'/>');});
-  act.forEach(function(e){h.push('<path d="'+pathD(geom(e[0],e[1]))+'" style="fill:none;stroke:'+cc+';stroke-width:3.4;stroke-linecap:round'+(e[0]==="guard"?';stroke-dasharray:6 5':'')+'"/>');});
+  STATIC.forEach(function(e){
+    if(dnsLive&&e[0]==="egress"&&e[1]==="attacker") return;
+    var k=ekey(e[0],e[1]),op=est[k];
+    h.push('<path class="edge" d="'+pathD(geom(e[0],e[1]))+'"'+(op?' style="stroke:var(--red);stroke-opacity:'+op+';stroke-width:2.6"':'')+'"/>');
+  });
+  var flowStroke=dnsBlock?green:cc;
+  act.forEach(function(e){h.push('<path d="'+pathD(geom(e[0],e[1]))+'" style="fill:none;stroke:'+flowStroke+';stroke-width:3.4;stroke-linecap:round'+(e[0]==="guard"?';stroke-dasharray:6 5':'')+'"/>');});
+  if(dnsHold){
+    if(dnsHold.rest){
+      s19Edges().slice(0,2).forEach(function(e){
+        h.push('<path d="'+pathD(geom(e[0],e[1]))+'" style="fill:none;stroke:'+green+';stroke-width:3.2;stroke-linecap:round"/>');
+      });
+    }
+    var dg=dnsHold.g, dloc=dnsHold.loc, samples=8, pd="M"+dg.p0[0]+","+dg.p0[1];
+    for(var si=1;si<=samples;si++){var spth=pt(dg,dloc*si/samples);pd+=" L"+spth[0]+","+spth[1];}
+    h.push('<path d="'+pd+'" style="fill:none;stroke:'+green+';stroke-width:3.6;stroke-linecap:round"/>');
+  }
   var G=NODE.guard, gAct=an.guard||(S.prot&&cur.guardOnly);
   var gTitle=S.prot?"Endpoint Control and Prevention (ECP) on the laptop":"No AI-aware control on this laptop";
   var gSub=S.prot?"visibility · posture · runtime: allow / hold for approval / block at the tool call":"generic illustration on the laptop";
@@ -554,16 +634,24 @@ function render(){
   NODES.forEach(function(n){
     if(n.id==="guard") return;
     var a=!!an[n.id], tg=tag(n.id);
-    var sc=a?cc:tg?tg[1]:css("border2");
-    var fill=a?(cur.bad?css("redSoft"):cur.guardOnly?css("greenSoft"):css("blueSoft")):css("panel");
+    var sc=a?(dnsBlock?green:cc):tg?tg[1]:css("border2");
+    var fill=a?(dnsBlock?css("greenSoft"):cur.bad?css("redSoft"):cur.guardOnly?css("greenSoft"):css("blueSoft")):css("panel");
     var dash=(!a&&tg&&tg[1]===red)?';stroke-dasharray:5 3':'';
     h.push('<g><title>'+esc(n.title+" ("+n.tech+")\nIn everyday terms: "+EDAY[n.id]+"\n"+COMP[n.id])+'</title><rect x="'+(n.x-n.w/2)+'" y="'+(n.y-n.h/2)+'" width="'+n.w+'" height="'+n.h+'" rx="9" style="fill:'+fill+';stroke:'+sc+';stroke-width:'+(a?2.6:tg?1.6:1)+dash+'"/>'+
       fitted(n.x,n.y-4,"ntitle",n.title,n.w-22,16)+fitted(n.x,n.y+13,"nsub",n.sub,n.w-20,13)+
       (tg?fitted(n.x,n.y+n.h/2+18,"ntag",tg[0],Math.min(n.w+6,132),15).replace('class="ntag"','class="ntag" style="fill:'+tg[1]+'"'):'')+'</g>');
   });
   if(S.prot&&cur.verdict&&cur.bpos&&tt>0.3) h.push('<path d="M'+cur.bpos[0]+',500 L'+cur.bpos[0]+','+(cur.bpos[1]+10)+'" style="fill:none;stroke:'+green+';stroke-width:2;stroke-dasharray:4 4"/>');
-  packets.forEach(function(p){h.push('<circle cx="'+p[0]+'" cy="'+p[1]+'" r="12" style="fill:'+cc+';opacity:.25"/><circle cx="'+p[0]+'" cy="'+p[1]+'" r="6" style="fill:'+cc+'"/>');});
-  if(blocked&&tt>=0.99&&packets.length){var p=packets[0];h.push('<circle cx="'+p[0]+'" cy="'+p[1]+'" r="13" style="fill:none;stroke:'+green+';stroke-width:2.5"/><path d="M'+(p[0]-6)+','+(p[1]-6)+' L'+(p[0]+6)+','+(p[1]+6)+' M'+(p[0]+6)+','+(p[1]-6)+' L'+(p[0]-6)+','+(p[1]+6)+'" style="stroke:'+green+';stroke-width:2.5"/>');}
+  packets.forEach(function(p){var pc=dnsBlock?green:cc;h.push('<circle cx="'+p[0]+'" cy="'+p[1]+'" r="12" style="fill:'+pc+';opacity:.25"/><circle cx="'+p[0]+'" cy="'+p[1]+'" r="6" style="fill:'+pc+'"/>');});
+  if(ecpBlock&&tt>=0.99&&packets.length){var p=packets[0];h.push('<circle cx="'+p[0]+'" cy="'+p[1]+'" r="13" style="fill:none;stroke:'+green+';stroke-width:2.5"/><path d="M'+(p[0]-6)+','+(p[1]-6)+' L'+(p[0]+6)+','+(p[1]+6)+' M'+(p[0]+6)+','+(p[1]-6)+' L'+(p[0]-6)+','+(p[1]+6)+'" style="stroke:'+green+';stroke-width:2.5"/>');}
+  if(dnsHold&&dnsHold.show){
+    var sp=dnsHold.rest?dnsPoint():pt(dnsHold.g,DNS_STOP);
+    h.push('<g transform="translate('+sp[0]+' '+sp[1]+')"><path d="M0,-16 L13,-11 V1 C13,10 0,17 0,17 C0,17 -13,10 -13,1 V-11 Z" fill="var(--panel)" stroke="'+green+'" stroke-width="2.2"/><path d="M-6,0 L-1.5,5 L7,-6" fill="none" stroke="'+green+'" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></g>');
+    var nx=448,ny=456,nw=172,nh=38;
+    h.push('<g><rect x="'+nx+'" y="'+ny+'" width="'+nw+'" height="'+nh+'" rx="8" style="fill:var(--panel);stroke:'+green+';stroke-width:1.8"/>'+
+      '<text x="'+(nx+nw/2)+'" y="'+(ny+17)+'" text-anchor="middle" style="font:800 12px var(--font);fill:'+green+'">DNS lookup blocked</text>'+
+      '<text x="'+(nx+nw/2)+'" y="'+(ny+33)+'" text-anchor="middle" style="font:800 12px var(--font);fill:'+green+'">by policy (simulated)</text></g>');
+  }
   if(S.prot) st.forEach(function(s,i){
     if(!s.verdict||!s.bpos||!(i<idx||(i===idx&&tt>=0.4))) return;
     var c=s.verdict==="allow"?green:s.verdict==="ask"?amber:red, w=s.badge.length*9.2+24;
@@ -596,11 +684,12 @@ function render(){
   var sig=(showE?"E":"")+(showI?"I":"")+(showK?"K":"");
   if(render.fx!==sig){
     render.fx=sig;
-    document.getElementById("fx").innerHTML=(showE?burst(100,368,"ecp"):"")+(showK?burst(818,108,"kt"):"")+(showI?burst(1162,477,"ib"):"");
+    document.getElementById("fx").innerHTML=(showE?burst(100,368,"ecp"):"")+(showK?burst(818,108,"kt"):"")+(showI&&!(dnsHold&&dnsHold.show)?burst(1162,477,"ib"):"");
   }
 
   // controls
   document.getElementById("playBtn").textContent=S.playing?"Pause":finished?"Replay":"Play";
+  paintCompare();
   function syncLayer(id,on){
     var el=document.getElementById(id);
     el.classList.toggle("on",on);
@@ -644,24 +733,84 @@ function render(){
   var ed=edLine(cur);
   var edPlain=ed.text?("In everyday terms"+(ed.who?" · "+ed.who:"")+": "+ed.text):"";
   var finText=finished?outcomeSentence():"";
+  var endLine="";
+  if(S.compare&&finished){
+    var cp=S.compare.phase;
+    if(cp==="pause"||cp==="off") endLine="No one noticed (simulated)";
+    else if(cp==="done") endLine="Alerted in seconds (simulated)";
+  }
+  var alertHtml="";
+  if(S.net&&(cur.id==="s19"||has("s19"))){
+    var dest="sync.pdfkit-cdn.example";
+    alertHtml='<aside class="kalert" aria-label="Simulated alert"><div class="kicker">Simulated alert</div><div class="ht">Kentik alert: unusual outbound flow</div><dl><dt>Source</dt><dd>Employee laptop</dd><dt>Destination</dt><dd>'+esc(dest)+'</dd><dt>Bytes out</dt><dd>184 KB (simulated)</dd><dt>First seen</dt><dd>just now (simulated)</dd></dl><p class="syslog">firewall/proxy syslog (simulated): employee-laptop → '+esc(dest)+':443</p><p class="noblock">Kentik alerts. It does not block.</p></aside>';
+  }
   var bare=withoutProtectionSection(finished);
   var barePlain=bare.replace(/<[^>]+>/g," ").replace(/\s+/g," ").trim();
   var c=document.getElementById("card"); c.style.borderLeftColor=cc;
-  c.title=[cur.title, txt, edPlain, finText, barePlain].filter(Boolean).join("\n");
-  c.innerHTML='<div class="meta">STEP '+(idx+1)+' OF '+st.length+' · '+esc(cur.phase.toUpperCase())+(cur.bad?' · SIMULATED ATTACK':'')+'</div><div class="ttl" title="'+esc(cur.title)+'">'+esc(cur.title)+'</div>'+(SHORT?'':'<div class="body" title="'+esc(txt)+'">'+esc(txt)+'</div>')+
+  c.title=[cur.title, txt, edPlain, finText, endLine, barePlain].filter(Boolean).join("\n");
+  c.innerHTML='<div class="meta">STEP '+(idx+1)+' OF '+st.length+' · '+esc(cur.phase.toUpperCase())+(cur.bad?' · SIMULATED ATTACK':'')+'</div><div class="ttl" title="'+esc(cur.title)+'">'+esc(cur.title)+'</div>'+alertHtml+(endLine?'<div class="fin">'+esc(endLine)+'</div>':'')+(SHORT?'':'<div class="body" title="'+esc(txt)+'">'+esc(txt)+'</div>')+
     (ed.text?'<div class="ed" title="'+esc(edPlain)+'"><span class="edk">In everyday terms'+(ed.who?' · '+esc(ed.who):'')+':</span> '+esc(ed.text)+'</div>':'')+
     '<div class="extra" title="'+esc([decs.map(function(d){return d.replace(/<[^>]+>/g," ");}).join(" "), finText].filter(Boolean).join(" "))+'">'+decs.join("")+(finished?'<div class="fin" style="color:var(--'+finColor+')">'+esc(finText)+'</div>':'')+'</div>'+
     bare;
 }
 
 function go(i,t){S.idx=i;S.t=t;}
-function play(){ if(S.playing){S.playing=false;render();return;} var st=steps(); if(S.idx>=st.length-1&&S.t>=1) go(0,0); S.once=false;S.playing=true;render(); }
-function step(){ S.playing=false; if(S.t>=1){ if(S.idx<steps().length-1) go(S.idx+1,0); else {render();return;} } S.once=true; render(); }
-function reset(){S.playing=false;S.once=false;go(0,0);render();}
+function play(){
+  if(S.compare&&S.compare.phase==="done") restoreCompare();
+  if(S.compare&&S.compare.phase==="pause"){beginCompareOn();return;}
+  if(S.playing){S.playing=false;render();return;}
+  var st=steps(); if(S.idx>=st.length-1&&S.t>=1) go(0,0); S.once=false;S.playing=true;render();
+}
+function step(){ if(S.compare) restoreCompare(); S.playing=false; if(S.t>=1){ if(S.idx<steps().length-1) go(S.idx+1,0); else {render();return;} } S.once=true; render(); }
+function reset(){ if(S.compare) restoreCompare(); S.playing=false;S.once=false;go(0,0);render();}
 function replay(autoplay){S.once=false;go(0,0);S.playing=autoplay!==false;render();}
-function setProt(v,autoplay){S.prot=!!v;replay(autoplay);}
-function setDns(v,autoplay){S.dns=!!v;replay(autoplay);}
-function setNet(v,autoplay){S.net=!!v;replay(autoplay);}
+function setProt(v,autoplay){if(S.compare) restoreCompare(); S.prot=!!v;replay(autoplay);}
+function setDns(v,autoplay){if(S.compare) restoreCompare(); S.dns=!!v;replay(autoplay);}
+function setNet(v,autoplay){if(S.compare) restoreCompare(); S.net=!!v;replay(autoplay);}
+function clearCompareUi(){
+  var b=document.getElementById("compareBanner"); b.hidden=true; b.textContent=""; b.className="compare-banner";
+  document.getElementById("compareSum").hidden=true;
+  var btn=document.getElementById("compareBtn"); btn.setAttribute("aria-pressed","false");
+}
+function restoreCompare(){
+  if(!S.compare) return;
+  var saved=S.compare.saved;
+  S.compare=null; S.playing=false; S.once=false;
+  S.prot=saved.prot; S.dns=saved.dns; S.net=saved.net;
+  clearCompareUi();
+}
+function paintCompare(){
+  var b=document.getElementById("compareBanner"), sum=document.getElementById("compareSum"), btn=document.getElementById("compareBtn");
+  if(!S.compare){clearCompareUi();return;}
+  var phase=S.compare.phase;
+  btn.setAttribute("aria-pressed", phase==="done"?"false":"true");
+  if(phase==="pause"){b.hidden=false; b.className="compare-banner bad"; b.innerHTML="Without Kentik or Infoblox"+'<div class="pass-end">No one noticed (simulated)</div>';}
+  else if(phase==="off"){b.hidden=false; b.className="compare-banner bad"; b.textContent="Without Kentik or Infoblox";}
+  else if(phase==="on"){b.hidden=false; b.className="compare-banner good"; b.textContent="With Kentik + Infoblox (better together)";}
+  else {b.hidden=true; b.textContent="";}
+  sum.hidden=phase!=="done";
+}
+function beginCompare(){
+  if(S.compare&&S.compare.phase!=="done"){restoreCompare(); render(); return;}
+  var saved={prot:S.prot,dns:S.dns,net:S.net};
+  if(REDUCE_MOTION){
+    S.compare={phase:"done",saved:saved,left:0};
+    S.prot=false; S.dns=true; S.net=true; S.playing=false; S.once=false;
+    go(steps().length-1,1); render(); return;
+  }
+  S.compare={phase:"off",saved:saved,left:0,hold:0,dnsHeld:false};
+  S.prot=false; S.dns=false; S.net=false; S.once=false; go(0,0); S.playing=true; render();
+}
+function beginCompareOn(){
+  if(!S.compare) return;
+  S.compare.phase="on"; S.compare.left=0; S.compare.hold=0; S.compare.dnsHeld=false;
+  S.prot=false; S.dns=true; S.net=true; S.once=false; go(0,0); S.playing=true; render();
+}
+function onComparePassDone(){
+  if(!S.compare) return;
+  if(S.compare.phase==="off"){S.compare.phase="pause"; S.compare.left=2000; render();}
+  else if(S.compare.phase==="on"){S.compare.phase="done"; S.playing=false; render();}
+}
 function burst(x,y,kind){
   var spec=kind==="ib"?{fill:"#ffe14a",stroke:"#111",word:"BLOCKED!",sub:"Infoblox DNS",ink:"#9b0c12"}:
     kind==="kt"?{fill:"#D3400F",stroke:"#3a1204",word:"ALERT!",sub:"Kentik flow flagged",ink:"#fff8f4"}:
@@ -716,7 +865,8 @@ function bindChk(id,get,set){
 }
 bindChk("depthDns",function(){return S.dns;},setDns);
 bindChk("depthNet",function(){return S.net;},setNet);
-bindChk("depthBoth",function(){return S.dns&&S.net;},function(v){S.dns=!!v;S.net=!!v;replay();});
+bindChk("depthBoth",function(){return S.dns&&S.net;},function(v){if(S.compare) restoreCompare(); S.dns=!!v;S.net=!!v;replay();});
+document.getElementById("compareBtn").addEventListener("click",beginCompare);
 document.getElementById("dots").addEventListener("click",function(e){var b=e.target.closest(".dot");if(!b)return;S.playing=false;go(parseInt(b.getAttribute("data-i"),10),0);S.once=true;render();});
 
 // theme toggle
